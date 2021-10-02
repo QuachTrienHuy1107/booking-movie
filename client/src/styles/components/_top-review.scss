@@ -1,0 +1,88 @@
+@import "../main";
+
+.top-review {
+    position: relative;
+    &__title {
+        padding-right: toRem(50);
+
+        &--subtitle {
+            color: $nearly-grey;
+            font-size: toRem(16);
+            font-weight: normal;
+            line-height: 1.5;
+            padding: toRem(24) toRem(16) 0px 0px;
+        }
+    }
+
+    &__reviews {
+        margin: toRem(20) 0;
+
+        &__item {
+            border: 1px solid $xlight-grey;
+            border-radius: 4px;
+            width: toRem(400) !important;
+            min-width: toRem(400);
+            padding: toRem(24);
+            min-height: toRem(240);
+            display: flex !important;
+            justify-content: space-between;
+            flex-direction: column;
+
+            &__info {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            &__content {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: block;
+                white-space: normal;
+                padding-top: toRem(24);
+            }
+
+            &__control {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                &--left {
+                    > span {
+                        font-size: toRem(14);
+                        color: $nearly-black;
+                        margin-left: toRem(-10);
+                        margin-right: toRem(20);
+                    }
+
+                    button {
+                        border: none;
+                        transform: translateX(toRem(-10));
+                    }
+                }
+
+                &--right {
+                    span {
+                        color: $xlight-grey;
+                    }
+                }
+            }
+        }
+
+        .slick-list {
+            // overflow: auto !important;
+            padding-bottom: toRem(20);
+            position: relative;
+
+            &::-webkit-scrollbar {
+                width: 2px !important;
+            }
+            &::-webkit-scrollbar-thumb {
+                background-color: #bbb9b9;
+                background-clip: content-box;
+                border-radius: 20px;
+                border: 4px solid transparent;
+            }
+        }
+    }
+}

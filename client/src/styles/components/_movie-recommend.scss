@@ -1,0 +1,26 @@
+@import "../main";
+
+.movie-rec {
+    position: relative;
+    .slick {
+        &-prev,
+        &-next {
+            &::before {
+                color: $black;
+            }
+        }
+    }
+
+    .slick-slide {
+        padding-right: toRem(10);
+        // width: toRem(222) !important;
+    }
+
+    .slick-active {
+        > div {
+            .movies__item:last-child {
+                padding-right: 0 !important;
+            }
+        }
+    }
+}

@@ -1,0 +1,40 @@
+.container {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.spacing {
+    margin: toRem(30) 0;
+}
+
+.fence {
+    right: 0;
+    top: 0;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgb(255, 255, 255) 50%);
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    display: flex;
+    position: absolute;
+    animation: 0.3s ease 0s 1 normal none running bcCCNc;
+    z-index: 2;
+    width: toRem(55);
+    height: 100%;
+}
+
+.slick {
+    &-prev,
+    &-next {
+        &::before {
+            color: $black;
+        }
+    }
+}
+
+.pending {
+    opacity: 0.4;
+}
