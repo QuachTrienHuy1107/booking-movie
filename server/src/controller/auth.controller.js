@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 const { Token } = require("../model/user/token.model");
 const User = require("../model/user/user.model");
 const { sendMail } = require("../shared/mail");
+const cloudinary = require("cloudinary").v2;
+const logger = require("../config/logger");
 
 /**
  * @Desc Get user detail
@@ -202,9 +204,89 @@ const getMe = async (req, res) => {
         const user = await User.findById(userId).populate({
             path: "showtimes",
             select: "tickets time",
+            populate: [
+                { path: "cinema", select: "cinema_name -_id " },
+                { path: "movie", select: "title -_id" },
+            ],
         });
 
+        // const user = await User.aggregate([
+        //     {
+        //         $match: { _id: mongoose.Types.ObjectId(userId) },
+        //     },
+        //     {
+        //         $lookup: { from: "showtimes", localField: "showtimes", foreignField: "_id", as: "showtimes_docs" },
+        //     },
+        // ]);
+
         res.send(user);
+    } catch (error) {
+        logger.error(error.message);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+
+const updateProfile = async (req, res) => {
+    try {
+        const { file } = req; //Get the file to request to server
+
+        const { username, email, newPassword, confirmPassword, oldPassword } = req.body;
+        let imgUrl = null;
+
+        //Validation
+        if (confirmPassword !== newPassword)
+            return res.status(404).send("The two passwords that you entered do not match!");
+
+        const userId = req.user?.userId;
+
+        if (!username || !email) {
+            return res.status(404).json({
+                success: false,
+                message: "Missing username and/or email",
+            });
+        }
+        const userFound = await User.findById(userId);
+        if (!userFound) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        // Verify password
+        const isPasswordCorrect = bcrypt.compareSync(oldPassword, userFound.password);
+        if (!isPasswordCorrect) {
+            return res.status(403).json({ success: false, message: "Incorrect password" });
+        }
+
+        //Setup
+        const salt = bcrypt.genSaltSync(10);
+        const hashPassword = bcrypt.hashSync(newPassword, salt);
+
+        if (!!file) {
+            cloudinary.config({
+                cloud_name: process.env.CLOUDINARY_NAME,
+                api_key: process.env.CLOUDINARY_API_KEY,
+                api_secret: process.env.CLOUDINARY_API_SECRET_KEY,
+            });
+
+            const uploadResponse = await cloudinary.uploader.upload(file.path, {
+                upload_preset: "dev_setups",
+            });
+            imgUrl = uploadResponse.url;
+        }
+
+        const data = {
+            ...userFound._doc,
+            username,
+            email,
+            password: hashPassword,
+            updatedAt: Date.now(),
+            avatar:
+                imgUrl ||
+                userFound.avatar ||
+                "https://ddxcu89oqzgqh.cloudfront.net/uploads/account/avatar/5c92181f98f4500bb0003fbc/44884218_345707102882519_2446069589734326272_n.jpg",
+        };
+
+        const user = await User.findOneAndUpdate({ _id: userId }, data, { new: true });
+        if (!!user) return res.status(200).send(user);
     } catch (error) {
         logger.error(error.message);
         res.status(500).json({ success: false, message: "Internal server error" });
@@ -215,4 +297,4 @@ const logout = (req, res) => {
     res.send("logou");
 };
 
-module.exports = { signup, login, refreshToken, forgotPassword, resetPassword, logout, getMe };
+module.exports = { signup, login, refreshToken, forgotPassword, resetPassword, logout, getMe, updateProfile };

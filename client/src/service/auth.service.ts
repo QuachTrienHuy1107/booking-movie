@@ -24,6 +24,13 @@ const authSvc = {
             .then((response) => ({ response }))
             .catch((error) => ({ error }));
     },
+    updateProfile: (payload: any) => {
+        const url = API.ME;
+        return axiosClient
+            .put(url, payload)
+            .then((response) => ({ response }))
+            .catch((error) => ({ error }));
+    },
 };
 
 export default authSvc;

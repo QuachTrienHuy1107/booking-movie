@@ -51,7 +51,11 @@ const Header: React.FC = () => {
                         <div className="header__right__userInfo">
                             {Object.keys(credential).length === 0 ? (
                                 <Link to={ROUTES.LOGIN}>
-                                    <img src={avatar} alt="avatar" className="header__right__userInfo--avatar" />
+                                    <img
+                                        src={credential.user?.avatar}
+                                        alt="avatar"
+                                        className="header__right__userInfo--avatar"
+                                    />
                                     <p className="header__right__userInfo--name">Login</p>
                                 </Link>
                             ) : (
@@ -90,7 +94,7 @@ const Header: React.FC = () => {
                             <i className="fa fa-map-marker-alt"></i>
                             <Dropdown overlay={menu} trigger={["click"]}>
                                 <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
-                                    Hồ Chí Minh <DownOutlined />
+                                    VIETNAM <DownOutlined />
                                 </a>
                             </Dropdown>
                         </div>

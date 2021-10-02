@@ -51,6 +51,20 @@ const movieSlice = createSlice({
             state.error = action.payload;
         },
 
+        getMovieByGenres: (state, action: PayloadAction<MovieWithLanguagePayload>) => {
+            state.isLoading = true;
+        },
+        getMovieByGenresSuccess: (state, action: PayloadAction<MoviePaginationResponse>) => {
+            state.moviePagination = action.payload;
+            state.isLoading = false;
+            state.error = null;
+        },
+        getMovieByGenresFailure: (state, action: PayloadAction<Error>) => {
+            console.log("error", action.payload);
+            state.isLoading = false;
+            state.error = action.payload;
+        },
+
         getMovieDetailAction(state, action: PayloadAction<GetDetailPayload>) {
             state.isLoading = true;
             state.error = null;
@@ -105,6 +119,9 @@ export const {
     getMovieByLanguage,
     getMovieByLanguageSuccess,
     getMovieByLanguageFailure,
+    getMovieByGenres,
+    getMovieByGenresSuccess,
+    getMovieByGenresFailure,
     getShowtime,
     getShowtimeSuccess,
     getShowtimeFailure,

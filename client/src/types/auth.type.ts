@@ -1,6 +1,6 @@
 /* --- STATE --- */
 
-import { ShowtimeType } from "./shared/showtime.type";
+import { ShowtimeResponse } from "./movie.type";
 
 export interface ICredential {
     readonly _id?: string;
@@ -10,7 +10,7 @@ export interface ICredential {
     role?: string;
     password?: string;
     googleId?: string;
-    showtimes?: ShowtimeType;
+    showtimes?: ShowtimeResponse[];
 }
 
 export interface LoginResponse {

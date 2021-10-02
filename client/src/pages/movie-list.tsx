@@ -20,14 +20,11 @@ interface IMovies {}
 const MovieList: React.FC<IMovies> = () => {
     const dispatch = useAppDispatch();
     const { moviePagination, isLoading, error } = useAppSelector((state) => state.movieSlice);
-    const { resPagination, handlePageChange } = usePagination(1, 12);
-    const [listLang, setListlang] = React.useState<string[]>([]);
     const { languages } = useGetLanguages();
     const { genres } = useGetGenres();
-
-    // React.useEffect(() => {
-    //     error === "Missing language" && dispatch(getPaginateMoviesAction(resPagination));
-    // }, [error]);
+    const { resPagination, handlePageChange } = usePagination(1, 12);
+    const [listLang, setListlang] = React.useState<string[]>([]);
+    const [listGenres, setListGenres] = React.useState<string[]>([]);
 
     React.useEffect(() => {
         const data = {
@@ -63,7 +60,21 @@ const MovieList: React.FC<IMovies> = () => {
         }
     };
 
-    console.log("listLang", listLang);
+    const handlePickGenres = (genre: string) => {
+        const index = listGenres.findIndex((item: string) => item === genre);
+        if (index === -1) {
+            setListGenres((prev: string[]) => Array.from(new Set([...prev, genre])));
+        } else {
+            let newListGenres = [...listGenres];
+            newListGenres = newListGenres.filter((item: string) => item !== genre);
+
+            if (newListGenres.length === 0) {
+                setListGenres([]);
+                return dispatch(getPaginateMoviesAction(resPagination));
+            }
+            setListGenres(newListGenres);
+        }
+    };
 
     return (
         <div className="movielist">
@@ -103,7 +114,11 @@ const MovieList: React.FC<IMovies> = () => {
                                 >
                                     <Space size={[8, 16]} wrap>
                                         {genres?.map((genre: string, index: number) => (
-                                            <Button key={index} className="filter__btn filter__btn--genres">
+                                            <Button
+                                                key={index}
+                                                className="filter__btn filter__btn--genres"
+                                                onClick={() => handlePickGenres(genre)}
+                                            >
                                                 <span className="filter__text filter__text--genre">{genre}</span>
                                             </Button>
                                         ))}

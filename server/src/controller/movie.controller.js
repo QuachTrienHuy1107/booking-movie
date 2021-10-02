@@ -140,7 +140,7 @@ const booking = async (req, res) => {
         });
         await showtime.save();
 
-        await User.findOneAndUpdate({ _id: userId }, { $push: { showtimes: showtimeId } }, { new: true });
+        await User.findOneAndUpdate({ _id: userId }, { $addToSet: { showtimes: showtimeId } }, { new: true });
 
         return res.status(200).json({ success: true, message: "Create booking successfully", showtime });
     } catch (error) {

@@ -9,7 +9,9 @@ const {
     refreshToken,
     logout,
     getMe,
+    updateProfile,
 } = require("../controller/auth.controller");
+const uploadImage = require("../middleware/update-image");
 const { verifyToken } = require("../middleware/verify-token");
 
 /**
@@ -53,6 +55,13 @@ authRoute.put("/reset-password/:id/:token", resetPassword);
  * @access Public
  */
 authRoute.get("/me", verifyToken, getMe);
+
+/**
+ * @method GET
+ * @route /api/auth/me/
+ * @access Public
+ */
+authRoute.put("/me", verifyToken, uploadImage("file"), updateProfile);
 
 /**
  * @method GET

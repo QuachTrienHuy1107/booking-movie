@@ -38,3 +38,9 @@
 .pending {
     opacity: 0.4;
 }
+
+.img-preview {
+    width: toRem(102);
+    height: toRem(102);
+    border-radius: 50%;
+}

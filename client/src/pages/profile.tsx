@@ -1,13 +1,20 @@
+import { EditOutlined, UserOutlined } from "@ant-design/icons";
+import { Avatar, Button, Space, Tabs } from "antd";
+import BookingHistory from "components/booking-history";
+import EditProfile from "components/edit-profile";
 import React from "react";
-import { useParams } from "react-router";
+import { Col, Container, Row } from "react-bootstrap";
 import authSvc from "service/auth.service";
-import { ICredential, LoginResponse } from "types/auth.type";
-import { GetDetailPayload } from "types/shared/get-detail.type";
+import { ICredential } from "types/auth.type";
+import "../styles/pages/_profile.scss";
+const { TabPane } = Tabs;
 
 const Profile: React.FC = () => {
     const [me, setMe] = React.useState<ICredential>({ email: "", username: "" });
     const [error, setError] = React.useState<Error | null>(null);
     const [loading, setLoading] = React.useState(false);
+    const [isEdit, setEdit] = React.useState(false);
+
     React.useEffect(() => {
         async function fetchData() {
             try {
@@ -28,11 +35,50 @@ const Profile: React.FC = () => {
         fetchData();
     }, []);
 
+    const onClose = () => {
+        setEdit(false);
+    };
+
     console.log("me", me);
 
     return (
-        <div>
-            <p>{error?.message}</p>
+        <div className="profile">
+            <div className="userinfo">
+                <Container>
+                    <Row>
+                        <Col md={6}>
+                            <Space align="start" size={13}>
+                                <Avatar icon={<UserOutlined />} src={me.avatar} />
+                                <div>
+                                    <h1 className="userinfo__text userinfo__text--username">{me.username}</h1>
+
+                                    <span className="userinfo__text userinfo__text--email">Email: {me.email}</span>
+                                </div>
+                            </Space>
+                        </Col>
+                        <Col md={6}>
+                            <div className="userinfo__operations">
+                                <Space>
+                                    <Button shape="circle" icon={<EditOutlined />} onClick={() => setEdit(true)} />
+                                </Space>
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
+                <EditProfile isOpen={isEdit} onClose={onClose} me={me} />
+            </div>
+            <Container>
+                <div className="main">
+                    <Tabs>
+                        <TabPane tab="Booking history" key="1">
+                            <BookingHistory bookingHistory={me.showtimes} />
+                        </TabPane>
+                        <TabPane tab="Reviews" key="2">
+                            123
+                        </TabPane>
+                    </Tabs>
+                </div>
+            </Container>
         </div>
     );
 };

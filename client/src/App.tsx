@@ -1,3 +1,4 @@
+import { BackTop } from "antd";
 import LoginSuccess from "components/login-success";
 import { useScreenType } from "hooks/useScreenType";
 import React from "react";
@@ -12,6 +13,7 @@ function App() {
     return (
         <React.Suspense fallback={<div>Loading</div>}>
             <FullScreen>
+                <BackTop />
                 <Switch>
                     {renderRoutes(routes)}
                     <Route exact path={ROUTES.NOTFOUND} component={NotFoundPage} />

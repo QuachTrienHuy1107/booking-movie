@@ -33,7 +33,7 @@ const createNewShowTime = async (req, res) => {
 
         const cinema = await Cinema.findOneAndUpdate(
             { _id: cinemaId },
-            { $push: { showtimes: showtime._id, movies: movieId } },
+            { $addToSet: { showtimes: showtime._id, movies: movieId } },
             { new: true }
         );
 
@@ -92,15 +92,6 @@ const getStatistic = async (req, res) => {
                 $group: {
                     _id: "$_id",
                     tickets: { $addToSet: "$tickets" },
-                },
-            },
-
-            {
-                $lookup: {
-                    from: "cinema",
-                    localField: "cinema",
-                    foreignField: "_id",
-                    as: "newCinema",
                 },
             },
         ]);

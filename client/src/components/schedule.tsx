@@ -1,13 +1,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from "react";
-import "../styles/components/_schedule.scss";
-import { Row, Col } from "react-bootstrap";
 import { Button, Modal, Space, Tabs } from "antd";
-import { CinemaResponse } from "types/cinema.type";
-import { ShowtimeType } from "types/shared/showtime.type";
 import moment from "moment";
+import React from "react";
+import { Col, Row } from "react-bootstrap";
 import { useHistory } from "react-router";
+import { CinemaResponse } from "types/cinema.type";
+import { ShowtimeResponse } from "types/movie.type";
 import { ROUTES } from "utils/constant";
+import "../styles/components/_schedule.scss";
 
 const { TabPane } = Tabs;
 
@@ -43,7 +43,7 @@ const Schedule: React.FC<ISchedule> = ({ cinema }) => {
     return (
         <div className="schedule">
             <Tabs tabBarExtraContent={tabExtra}>
-                <TabPane tab="Tab 1">
+                <TabPane tab="Tab 1" key="1">
                     <ul className="schedule__detail">
                         {cinema?.map((item: CinemaResponse, index: number) => (
                             <li key={item._id}>
@@ -82,7 +82,7 @@ const Schedule: React.FC<ISchedule> = ({ cinema }) => {
                                     </Col>
                                     <Col md={8}>
                                         <Space size={[8, 16]} wrap>
-                                            {item.showtimes.map((showtime: ShowtimeType) => {
+                                            {item.showtimes.map((showtime: ShowtimeResponse) => {
                                                 return (
                                                     <Button
                                                         key={showtime._id}

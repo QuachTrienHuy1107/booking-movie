@@ -46,8 +46,18 @@ const authSlice = createSlice({
             state.isLoading = false;
         },
 
-        clearData: () => {
-            return initialState;
+        updateProfile: (state, action: PayloadAction<any>) => {
+            state.error = null;
+            state.isLoading = true;
+        },
+        updateProfileSuccess: (state, action: PayloadAction<ICredential>) => {
+            state.isLoading = false;
+            state.error = null;
+            state.credential.user = action.payload;
+        },
+        updateProfileFailure: (state: any, action: PayloadAction<string>) => {
+            // state.error = action.payload;
+            state.isLoading = false;
         },
     },
 });
@@ -62,6 +72,9 @@ export const {
     registerAction,
     registerActionSuccess,
     registerActionFailure,
+    updateProfile,
+    updateProfileSuccess,
+    updateProfileFailure,
 } = actions;
 
 export default reducer;

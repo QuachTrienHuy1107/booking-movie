@@ -11,3 +11,7 @@
 [2021-09-27 23:26:09] [[31merror[39m] Cast to ObjectId failed for value "me" (type string) at path "_id" for model "user"
 [2021-09-27 23:27:09] [[31merror[39m] Cast to ObjectId failed for value "1" (type string) at path "_id" for model "user"
 [2021-09-27 23:28:39] [[31merror[39m] Cast to ObjectId failed for value "me" (type string) at path "_id" for model "user"
+[2021-10-02 22:43:04] [[31merror[39m] Cannot read properties of undefined (reading 'originalname')
+[2021-10-02 22:43:33] [[31merror[39m] Cannot read properties of undefined (reading 'path')
+[2021-10-02 22:44:17] [[31merror[39m] Cannot read properties of undefined (reading 'path')
+[2021-10-03 02:27:37] [[31merror[39m] userUpdated is not defined
