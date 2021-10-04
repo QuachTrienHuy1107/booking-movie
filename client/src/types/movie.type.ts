@@ -30,8 +30,8 @@ export interface MoviePaginationResponse {
     total: number;
 }
 
-export interface MovieWithLanguagePayload {
-    languages: string;
+export interface MovieFilterPayload {
+    filter: string;
 }
 
 export interface PaginationRequestType {
@@ -72,5 +72,6 @@ export interface HomeState {
     movieDetail: MovieResponse;
     showtime: ShowtimeResponse;
     isLoading: boolean;
+    isSuccess?: boolean;
     error?: Error | null;
 }

@@ -7,10 +7,16 @@
         overflow: hidden;
         padding-bottom: toRem(15);
         padding-top: toRem(30);
+        max-height: toRem(180);
         .title {
             color: $white;
             font-size: toRem(48);
             margin-bottom: toRem(20);
+        }
+
+        //OVERRIDE
+        .ant-skeleton-title {
+            margin-top: 0 !important;
         }
 
         .detail {

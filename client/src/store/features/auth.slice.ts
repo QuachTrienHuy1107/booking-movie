@@ -49,15 +49,18 @@ const authSlice = createSlice({
         updateProfile: (state, action: PayloadAction<any>) => {
             state.error = null;
             state.isLoading = true;
+            state.isSuccess = false;
         },
-        updateProfileSuccess: (state, action: PayloadAction<ICredential>) => {
+        updateProfileSuccess: (state, action: PayloadAction<{ user: ICredential; isSuccess: boolean }>) => {
             state.isLoading = false;
             state.error = null;
-            state.credential.user = action.payload;
+            state.credential.user = action.payload.user;
+            state.isSuccess = action.payload.isSuccess;
         },
         updateProfileFailure: (state: any, action: PayloadAction<string>) => {
-            // state.error = action.payload;
+            state.error = action.payload;
             state.isLoading = false;
+            state.isSuccess = false;
         },
     },
 });

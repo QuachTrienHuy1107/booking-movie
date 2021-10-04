@@ -4,7 +4,7 @@ import {
     BookingPayload,
     HomeState,
     MoviePaginationResponse,
-    MovieWithLanguagePayload,
+    MovieFilterPayload,
     PaginationRequestType,
     ShowtimeResponse,
 } from "../../types/movie.type";
@@ -37,33 +37,33 @@ const movieSlice = createSlice({
             state.isLoading = false;
         },
 
-        getMovieByLanguage: (state, action: PayloadAction<MovieWithLanguagePayload>) => {
+        getFilterMovie: (state, action: PayloadAction<MovieFilterPayload>) => {
             state.isLoading = true;
         },
-        getMovieByLanguageSuccess: (state, action: PayloadAction<MoviePaginationResponse>) => {
+        getFilterMovieSuccess: (state, action: PayloadAction<MoviePaginationResponse>) => {
             state.moviePagination = action.payload;
             state.isLoading = false;
             state.error = null;
         },
-        getMovieByLanguageFailure: (state, action: PayloadAction<Error>) => {
+        getFilterMovieFailure: (state, action: PayloadAction<Error>) => {
             console.log("error", action.payload);
             state.isLoading = false;
             state.error = action.payload;
         },
 
-        getMovieByGenres: (state, action: PayloadAction<MovieWithLanguagePayload>) => {
-            state.isLoading = true;
-        },
-        getMovieByGenresSuccess: (state, action: PayloadAction<MoviePaginationResponse>) => {
-            state.moviePagination = action.payload;
-            state.isLoading = false;
-            state.error = null;
-        },
-        getMovieByGenresFailure: (state, action: PayloadAction<Error>) => {
-            console.log("error", action.payload);
-            state.isLoading = false;
-            state.error = action.payload;
-        },
+        // getMovieByGenres: (state, action: PayloadAction<MovieFilterPayload>) => {
+        //     state.isLoading = true;
+        // },
+        // getMovieByGenresSuccess: (state, action: PayloadAction<MoviePaginationResponse>) => {
+        //     state.moviePagination = action.payload;
+        //     state.isLoading = false;
+        //     state.error = null;
+        // },
+        // getMovieByGenresFailure: (state, action: PayloadAction<Error>) => {
+        //     console.log("error", action.payload);
+        //     state.isLoading = false;
+        //     state.error = action.payload;
+        // },
 
         getMovieDetailAction(state, action: PayloadAction<GetDetailPayload>) {
             state.isLoading = true;
@@ -92,15 +92,17 @@ const movieSlice = createSlice({
         },
 
         booking: (state, action: PayloadAction<BookingPayload>) => {
+            state.isSuccess = false;
             state.isLoading = true;
             state.error = null;
         },
         bookingSuccess: (state, action: PayloadAction<any>) => {
-            console.log("aaaa", action.payload);
+            state.isSuccess = true;
             state.error = null;
             state.isLoading = false;
         },
         bookingFailure: (state, action: PayloadAction<any>) => {
+            state.isSuccess = false;
             state.error = action.payload;
             state.isLoading = false;
         },
@@ -116,12 +118,9 @@ export const {
     getMovieDetailAction,
     getMovieDetailActionSuccess,
     getMovieDetailFailure,
-    getMovieByLanguage,
-    getMovieByLanguageSuccess,
-    getMovieByLanguageFailure,
-    getMovieByGenres,
-    getMovieByGenresSuccess,
-    getMovieByGenresFailure,
+    getFilterMovie,
+    getFilterMovieSuccess,
+    getFilterMovieFailure,
     getShowtime,
     getShowtimeSuccess,
     getShowtimeFailure,

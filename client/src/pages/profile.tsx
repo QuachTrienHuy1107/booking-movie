@@ -5,6 +5,7 @@ import EditProfile from "components/edit-profile";
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import authSvc from "service/auth.service";
+import { useAppSelector } from "store/store";
 import { ICredential } from "types/auth.type";
 import "../styles/pages/_profile.scss";
 const { TabPane } = Tabs;
@@ -14,6 +15,7 @@ const Profile: React.FC = () => {
     const [error, setError] = React.useState<Error | null>(null);
     const [loading, setLoading] = React.useState(false);
     const [isEdit, setEdit] = React.useState(false);
+    const { credential } = useAppSelector((state) => state.authSlice);
 
     React.useEffect(() => {
         async function fetchData() {
@@ -39,7 +41,6 @@ const Profile: React.FC = () => {
         setEdit(false);
     };
 
-    console.log("me", me);
 
     return (
         <div className="profile">
@@ -48,11 +49,15 @@ const Profile: React.FC = () => {
                     <Row>
                         <Col md={6}>
                             <Space align="start" size={13}>
-                                <Avatar icon={<UserOutlined />} src={me.avatar} />
+                                <Avatar icon={<UserOutlined />} src={credential.user?.avatar} />
                                 <div>
-                                    <h1 className="userinfo__text userinfo__text--username">{me.username}</h1>
+                                    <h1 className="userinfo__text userinfo__text--username">
+                                        {credential.user?.username}
+                                    </h1>
 
-                                    <span className="userinfo__text userinfo__text--email">Email: {me.email}</span>
+                                    <span className="userinfo__text userinfo__text--email">
+                                        Email: {credential.user?.email}
+                                    </span>
                                 </div>
                             </Space>
                         </Col>
@@ -74,7 +79,7 @@ const Profile: React.FC = () => {
                             <BookingHistory bookingHistory={me.showtimes} />
                         </TabPane>
                         <TabPane tab="Reviews" key="2">
-                            123
+                            ...
                         </TabPane>
                     </Tabs>
                 </div>

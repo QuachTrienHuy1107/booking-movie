@@ -1,62 +1,67 @@
 import { DislikeOutlined, LikeOutlined } from "@ant-design/icons";
-import { Button, Space, Spin } from "antd";
+import { Alert, Button, Space, Spin } from "antd";
 import usePagination from "hooks/usePagination";
-import React from "react";
+import moment from "moment";
+import React, { memo } from "react";
 import { useInView } from "react-intersection-observer";
 import reviewApi from "service/review.service";
 import { ReviewRepsonse } from "types/review.type";
 import "../styles/components/_review-list.scss";
 import UserInfo from "./common/info";
+import { Loading } from "./common/loading";
 import Rater from "./common/rating";
 import Timer from "./common/timer";
 
 interface IReviewList {
     _id?: string;
     reviews: ReviewRepsonse[];
-    handlePageChange?: () => void;
+    handlePageChange: (page: number) => void;
+    total: number;
+    isLoading: boolean;
 }
 
-const ReviewList: React.FC<IReviewList> = ({ handlePageChange, reviews }) => {
-    const [_reviews, _setReviews] = React.useState<ReviewRepsonse[]>([]);
-    const [loading, setLoading] = React.useState(false);
-    const [error, setError] = React.useState("");
-    const [page, setPage] = React.useState(1);
-    // const { resPagination, handlePageChange } = usePagination(1, 2);
+const options = {
+    root: null,
+    rootMargin: "0px 0px -100px 0px",
+    threshold: 1.0,
+};
 
-    // React.useEffect(() => {
-    //     const _data = {
-    //         ...resPagination,
-    //         _id,
-    //     };
-    //     async function fetchNewReview() {
-    //         try {
-    //             setLoading(true);
-    //             const { response, error } = (await reviewApi.getReviewByMovieId(_data)) as any;
-    //             if (!!error) throw new Error("INTERNAL SERVER");
-    //             _setReviews((_prev: ReviewRepsonse[]) => [..._prev, ...response.data]);
-    //         } catch (error: any) {
-    //             console.log("Error", error.message);
-    //             setError(error.message);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     }
-    //     fetchNewReview();
-    // }, [_id, resPagination]);
+const ReviewList: React.FC<IReviewList> = memo(({ handlePageChange, reviews, total, isLoading }) => {
+    const observer = React.useRef(null) as any;
+    const [currentPage, setCurrentPage] = React.useState(1);
+    const isHasMore = reviews.length < total ? true : false;
+    const isFirst = React.useRef(true);
 
-    console.log("_reviews", _reviews);
+    const lastReview = React.useCallback(
+        (rv: any) => {
+            if (observer.current) observer.current.disconnect();
+            observer.current = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting && !!isHasMore) {
+                    setCurrentPage((p) => p + 1);
+                }
+            }, options);
+            if (rv) observer.current.observe(rv);
+        },
+        [isHasMore]
+    );
+
+    React.useEffect(() => {
+        handlePageChange(currentPage);
+    }, [currentPage]);
 
     return (
-        <div className={`review-list ${loading && "pending"}`}>
-            {!!loading && <Spin />}
+        <div className={`review-list ${isLoading && "pending"}`}>
+            {!isFirst.current && !!isLoading && <Spin />}
+
             {reviews?.map((review: ReviewRepsonse, index: number) => {
+                const isLast = reviews.length === index + 1 ? true : false;
                 return (
                     <>
-                        <div className="review">
-                            <div className="review__wrapper">
+                        <div className="review" ref={isLast ? lastReview : null}>
+                            <div className="5review__wrapper">
                                 <div className="review__item review__item__info">
                                     <Space>
-                                        <UserInfo username={review.user.username} />
+                                        <UserInfo username={review.user?.username || ""} avatar={review.user?.avatar} />
                                     </Space>
                                     <Space>
                                         <Rater number={review.rating as number} size={24} />
@@ -72,7 +77,8 @@ const ReviewList: React.FC<IReviewList> = ({ handlePageChange, reviews }) => {
                                         <span>123 </span>
                                         <Button icon={<DislikeOutlined />} shape="circle" />
                                     </div>
-                                    <Timer time="24 days ago" />
+                                    {/* <Timer time={moment(review.createdAt, "YYYYMMDD").startOf("hour").fromNow()} /> */}
+                                    <Timer time={moment(review.createdAt).format("hh:MM A")} />
                                 </div>
                             </div>
                         </div>
@@ -81,5 +87,5 @@ const ReviewList: React.FC<IReviewList> = ({ handlePageChange, reviews }) => {
             })}
         </div>
     );
-};
+});
 export default ReviewList;

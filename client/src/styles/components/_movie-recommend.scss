@@ -2,14 +2,28 @@
 
 .movie-rec {
     position: relative;
-    .slick {
-        &-prev,
-        &-next {
-            &::before {
-                color: $black;
+
+    &--detail {
+        .slick {
+            &-prev,
+            &-next {
+                &::before {
+                    color: $black !important;
+                    font-size: toRem(30);
+                }
+            }
+
+            &-prev {
+                transform: translateX(toRem(-25px)) !important;
             }
         }
     }
+
+    // .slick {
+    //     &-prev {
+
+    //     }
+    // }
 
     .slick-slide {
         padding-right: toRem(10);

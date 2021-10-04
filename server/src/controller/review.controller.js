@@ -16,7 +16,7 @@ const addNewReview = async (req, res) => {
         //Create new review for a movie
 
         const newReview = new Review({ movie: movieId, user: userId, content, rating });
-        const review = await newReview.save().then((t) => t.populate("user", "username ").execPopulate());
+        const review = await newReview.save().then((t) => t.populate("user", "username email avatar").execPopulate());
         res.status(200).send(review);
     } catch (error) {
         console.log(error);
@@ -31,7 +31,7 @@ const getReviewByMovie = async (req, res) => {
     const { skip, limit } = Paginate(page, size);
     try {
         const reviewList = await Review.find({ movie: id })
-            .populate("user", "username email -_id")
+            .populate("user", "username email avatar -_id")
             .populate("movie", "title -_id")
             .skip(skip)
             .limit(limit)
@@ -39,7 +39,9 @@ const getReviewByMovie = async (req, res) => {
                 createdAt: -1,
             });
 
-        res.status(200).send(reviewList);
+        const total = await Review.find({ movie: id });
+
+        res.status(200).send({ reviewList, total: total.length });
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: "Internal Server Error" });

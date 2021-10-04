@@ -20,11 +20,15 @@ const getAllMovie = async (req, res) => {
  * @Desc get paginate movie
  */
 const getPaginateMovie = async (req, res) => {
-    const { page, size } = req.query;
+    const { page, size, q } = req.query;
     if (!page || !size) return res.status(404).json({ message: "Missing current page or limit size" });
     const { skip, limit } = Paginate(page, size);
     try {
+        const regex = new RegExp(q);
         const movies = await Movie.aggregate([
+            {
+                $match: { title: !!q ? regex : / / },
+            },
             {
                 $skip: skip,
             },
@@ -34,6 +38,24 @@ const getPaginateMovie = async (req, res) => {
         ]);
         const total = await Movie.find();
         return res.status(200).json({ movies, total: total.length });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+
+/**
+ * @Desc Search movie
+ */
+
+const searchMovie = async (req, res) => {
+    const { q } = req.query;
+    try {
+        const regex = new RegExp(q);
+        const movies = await Movie.find({ title: !!q ? regex : / / })
+            .select("title")
+            .limit(10);
+        return res.status(200).send(movies);
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: "Internal server error" });
@@ -74,13 +96,23 @@ const getGenres = async (req, res) => {
 
 const getMovieByLanguages = async (req, res) => {
     if (!req.query) return;
-    const { languages } = req.query;
-    if (!languages) return res.status(404).json({ success: false, message: "Missing language" });
-    const listLanguages = languages.split("|");
+    const { filter } = req.query;
+    console.log("filter", filter);
+
+    if (!filter) return res.status(404).json({ success: false, message: "Missing filter" });
+    const listFilter = filter.split("|");
 
     try {
-        const movies = await Movie.find({ languages: { $in: listLanguages } }).limit(20);
+        const movies = await Movie.find({ genres: { $in: listFilter } }).limit(20);
         res.status(200).json({ movies, total: movies.length });
+        // const movies = await Movie.aggregate([
+        //     {
+        //         $project: {
+        //             attribute3: { $setUnion: ["$languages", "$gr"] },
+        //         },
+        //     },
+        // ]);
+        // res.send(movies);
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: "Internal server error" });
@@ -122,7 +154,6 @@ const getMovieDetail = async (req, res) => {
 const booking = async (req, res) => {
     const { showtimeId, arrayTickets } = req.body;
     const userId = req.user?.userId;
-    console.log("showtimeId", showtimeId);
     try {
         //tickets is array include ticketId, userId
         const showtime = await Showtime.findById(showtimeId);
@@ -261,4 +292,5 @@ module.exports = {
     getLanguages,
     getGenres,
     booking,
+    searchMovie,
 };

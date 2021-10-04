@@ -1,9 +1,17 @@
 import { GetDetailPayload } from "types/shared/get-detail.type";
-import { BookingPayload, MovieWithLanguagePayload } from "../types/movie.type";
+import { BookingPayload, MovieFilterPayload } from "../types/movie.type";
 import { API } from "../utils/constant";
 import axiosClient from "./axiosClient";
 
 const movieApi = {
+    searchMovie: (params: any) => {
+        const url = `${API.SEARCH_MOVIE}`;
+        return axiosClient
+            .get(url, { params })
+            .then((response) => ({ response }))
+            .catch((error) => ({ error }));
+    },
+
     getMoviePagination: (params: any) => {
         const url = `${API.GET_ALL_PAGINATION}`;
         return axiosClient
@@ -19,8 +27,8 @@ const movieApi = {
             .then((response) => ({ response }))
             .catch((error) => ({ error }));
     },
-    getMovieByLanguage: (params: MovieWithLanguagePayload) => {
-        const url = `${API.GET_MOVIE_BY_LANGUAGES}`;
+    getFilterMovie: (params: MovieFilterPayload) => {
+        const url = `${API.GET_FILTER_MOVIE}`;
         return axiosClient
             .get(url, { params })
             .then((response) => ({ response }))

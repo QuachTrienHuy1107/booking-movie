@@ -17,7 +17,10 @@ const Home: React.FC = () => {
             <section className="premier">
                 <Container>
                     <img src={primierBanner} alt="" />
-                    <TitleNavigation title="Premieres" linkTo={ROUTES.MOVIELIST} subTitle="See All" />
+                    <div className="heading-title--hasFence">
+                        <TitleNavigation title="Premieres" linkTo={ROUTES.MOVIELIST} subTitle="See all" />
+                    </div>
+
                     <p>Brand new releases every Friday</p>
                     <MovieRecommend isHome={true} />
                 </Container>

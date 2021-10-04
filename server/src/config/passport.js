@@ -38,7 +38,6 @@ function configPassport(passport) {
     );
 
     passport.serializeUser((user, cb) => {
-        console.log("sss", user._id);
         cb(null, user._id);
     });
 

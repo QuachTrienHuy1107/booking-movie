@@ -17,7 +17,8 @@ const EditProfile: React.FC<IEditProfile> = ({ isOpen, onClose, me }) => {
     const dispatch = useAppDispatch();
     const [form] = Form.useForm();
     const { handleFileChange, avatar, preview, loading } = useUpload();
-    const { isLoading, error } = useAppSelector((state) => state.authSlice);
+    const { isLoading, error, isSuccess } = useAppSelector((state) => state.authSlice);
+    const [isChangePassword, setChangesPassword] = React.useState(false);
     const isFirst = React.useRef(true);
 
     React.useEffect(() => {
@@ -25,8 +26,19 @@ const EditProfile: React.FC<IEditProfile> = ({ isOpen, onClose, me }) => {
         if (!!error) return message.error(error);
     }, [error]);
 
+    React.useEffect(() => {
+        if (isFirst.current) return;
+        if (!!isSuccess) return message.success("Change profile successfully");
+    }, [isSuccess]);
+
     const onFinish = (values: any) => {
+        isFirst.current = false;
         const formData = new FormData();
+        for (var key in values) {
+            if ((values.hasOwnProperty(key) && !values[key]) || (values[key].trim() as string) === "") {
+                delete values[key];
+            }
+        }
         const data = !!avatar ? { ...values, file: avatar } : values;
         for (let key in data) {
             formData.append(key, data[key]);
@@ -40,16 +52,19 @@ const EditProfile: React.FC<IEditProfile> = ({ isOpen, onClose, me }) => {
                 username: me.username,
                 email: me.email,
                 avatar: me.avatar,
+                phone: me.phone || null,
             });
         }
     }, [form, me]);
 
-    const uploadButton = (
-        <div>
-            {loading ? <LoadingOutlined /> : <PlusOutlined />}
-            <div style={{ marginTop: 8 }}>Upload</div>
-        </div>
-    );
+    const handlePasswordChange = (e: any) => {
+        const value = e.target?.value as string;
+        if (!!value.trim()) {
+            setChangesPassword(true);
+        } else {
+            setChangesPassword(false);
+        }
+    };
 
     return (
         <>
@@ -79,24 +94,44 @@ const EditProfile: React.FC<IEditProfile> = ({ isOpen, onClose, me }) => {
                             <Col span={24}>
                                 <Form.Item
                                     name="username"
-                                    label="Username"
+                                    label={
+                                        <span>
+                                            Username <span className="error">*</span>
+                                        </span>
+                                    }
                                     rules={[{ required: true, message: "Please enter user name" }]}
                                 >
                                     <Input placeholder="Please enter user name" />
                                 </Form.Item>
+                            </Col>
+                            <Col span={24}>
                                 <Form.Item
                                     name="email"
-                                    label="Email"
-                                    rules={[{ required: true, message: "Please enter user name" }]}
+                                    label={
+                                        <span>
+                                            Email <span className="error">*</span>
+                                        </span>
+                                    }
+                                    rules={[{ required: true, message: "Please enter user name", type: "email" }]}
                                 >
                                     <Input placeholder="Please enter your email" />
                                 </Form.Item>
+                            </Col>
+                            <Col span={24}>
+                                <Form.Item name="phone" label="Phone number">
+                                    <Input placeholder="Please enter your phone number" />
+                                </Form.Item>
+                            </Col>
+                            <Col span={24}>
                                 <Form.Item
                                     name="oldPassword"
                                     label="Old password"
-                                    rules={[{ required: true, message: "Please enter your old password" }]}
+                                    rules={[{ required: isChangePassword, message: "Please enter your old password" }]}
                                 >
-                                    <Input placeholder="Please enter your old password" />
+                                    <Input
+                                        placeholder="Please enter your old password"
+                                        onChange={handlePasswordChange}
+                                    />
                                 </Form.Item>
                             </Col>
                             <Col span={24}>
@@ -104,7 +139,7 @@ const EditProfile: React.FC<IEditProfile> = ({ isOpen, onClose, me }) => {
                                     name="newPassword"
                                     label="New password"
                                     hasFeedback
-                                    rules={[{ required: true, message: "Please enter your new password" }]}
+                                    rules={[{ required: isChangePassword, message: "Please enter your new password" }]}
                                 >
                                     <Input.Password placeholder="Please enter your new password" />
                                 </Form.Item>
@@ -116,10 +151,10 @@ const EditProfile: React.FC<IEditProfile> = ({ isOpen, onClose, me }) => {
                                     dependencies={["password"]}
                                     hasFeedback
                                     rules={[
-                                        { required: true, message: "Please enter your password" },
+                                        // { required: true, message: "Please enter your password" },
                                         ({ getFieldValue }) => ({
                                             validator(_, value) {
-                                                if (!value || getFieldValue("newPassword") === value) {
+                                                if (getFieldValue("newPassword") === value) {
                                                     return Promise.resolve();
                                                 }
                                                 return Promise.reject(
@@ -129,7 +164,10 @@ const EditProfile: React.FC<IEditProfile> = ({ isOpen, onClose, me }) => {
                                         }),
                                     ]}
                                 >
-                                    <Input.Password placeholder="Please enter your password again" />
+                                    <Input.Password
+                                        placeholder="Please enter your password again"
+                                        onChange={handlePasswordChange}
+                                    />
                                 </Form.Item>
                             </Col>
 

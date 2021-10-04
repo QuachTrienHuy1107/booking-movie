@@ -10,6 +10,10 @@
     margin: toRem(30) 0;
 }
 
+.heading-title--hasFence {
+    padding-right: toRem(20);
+}
+
 .fence {
     right: 0;
     top: 0;
@@ -22,16 +26,30 @@
     position: absolute;
     animation: 0.3s ease 0s 1 normal none running bcCCNc;
     z-index: 2;
-    width: toRem(55);
+    width: toRem(15);
     height: 100%;
+
+    &--home {
+        // background-color: $nearly-blue;
+        background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, $nearly-blue 50%);
+        width: toRem(30);
+    }
 }
 
 .slick {
     &-prev,
     &-next {
+        transform: translate(-0, -60px) !important;
         &::before {
-            color: $black;
+            color: $white;
+            font-size: toRem(30);
         }
+    }
+}
+
+.slick-slider {
+    .slick-prev {
+        transform: translate(-25px, -60px) !important;
     }
 }
 
@@ -43,4 +61,9 @@
     width: toRem(102);
     height: toRem(102);
     border-radius: 50%;
+}
+
+.error {
+    color: $red;
+    margin-left: 1px;
 }

@@ -1,8 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AdditionalReviewPayload, ReviewPayload, ReviewRepsonse, ReviewState } from "types/review.type";
+import {
+    AdditionalReviewPayload,
+    ReviewPaginationResponse,
+    ReviewPayload,
+    ReviewRepsonse,
+    ReviewState,
+} from "types/review.type";
 
 const initialState: ReviewState = {
-    reviews: [],
+    reviews: { reviewList: [], total: 0 },
     isLoading: false,
 };
 
@@ -10,14 +16,23 @@ const reviewSlice = createSlice({
     name: "reviewslice",
     initialState,
     reducers: {
-        getReviewByMovie: (state, action: PayloadAction<ReviewPayload>) => {
+        getReviewByMovie: (state, action: PayloadAction<{ reviews: ReviewPayload; isLoadmore?: boolean }>) => {
             state.isLoading = true;
             state.error = null;
+            if (!action.payload.isLoadmore) {
+                state.reviews = { reviewList: [], total: 0 };
+            }
         },
-        getReviewByMovieSuccess: (state, action: PayloadAction<ReviewRepsonse[]>) => {
-            state.reviews = action.payload;
+        getReviewByMovieSuccess: (state, action: PayloadAction<ReviewPaginationResponse>) => {
+            let newReviews = JSON.parse(JSON.stringify(state.reviews));
+            newReviews = {
+                ...state.reviews,
+                total: action.payload.total,
+                reviewList: [...newReviews.reviewList, ...action.payload.reviewList],
+            };
             state.isLoading = false;
             state.error = null;
+            state.reviews = newReviews;
         },
         getReviewByMovieFailure: (state, action: PayloadAction<Error>) => {
             state.error = action.payload;
@@ -29,7 +44,7 @@ const reviewSlice = createSlice({
             state.error = null;
         },
         addNewReviewSuccess: (state, action: PayloadAction<ReviewRepsonse>) => {
-            state.reviews.unshift(action.payload);
+            state.reviews.reviewList.unshift(action.payload);
             state.error = null;
             state.isLoading = false;
         },

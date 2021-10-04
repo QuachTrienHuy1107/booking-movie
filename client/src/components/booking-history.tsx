@@ -1,31 +1,14 @@
-import React from "react";
-import { MovieResponse, ShowtimeResponse, TicketType } from "types/movie.type";
 import { Table } from "antd";
-import { CinemaResponse } from "types/cinema.type";
 import moment from "moment";
+import React from "react";
+import { CinemaResponse } from "types/cinema.type";
+import { MovieResponse, ShowtimeResponse, TicketType } from "types/movie.type";
 
 interface IBookingHistory {
     bookingHistory: ShowtimeResponse[] | undefined;
 }
 
-const dataSource = [
-    {
-        key: "1",
-        name: "Mike",
-        age: 32,
-        address: "10 Downing Street",
-    },
-    {
-        key: "2",
-        name: "John",
-        age: 42,
-        address: "10 Downing Street",
-    },
-];
-
 const BookingHistory: React.FC<IBookingHistory> = ({ bookingHistory }) => {
-    console.log("bookingHistory", bookingHistory);
-
     const columns = [
         {
             title: "Id",

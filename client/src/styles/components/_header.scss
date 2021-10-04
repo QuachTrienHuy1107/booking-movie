@@ -1,15 +1,18 @@
 @import "../main";
 .header {
     background-color: $black;
-    color: $nearly-white;
+    color: $white;
     height: toRem(64);
-    box-shadow: 3px 8px 20px 9px #fbfbfb;
+    // box-shadow: 3px 8px 20px 9px #fbfbfb;
+    position: sticky;
+    z-index: 10;
+
     &__wrapper {
         height: 100%;
-        position: sticky;
+
         top: 0;
         left: 0;
-        z-index: 10;
+
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -17,7 +20,7 @@
         font-size: toRem(14);
 
         a {
-            color: $nearly-white;
+            color: $white;
             font-weight: 500;
         }
 
@@ -41,14 +44,14 @@
     &__right {
         display: flex;
         align-items: center;
-        color: $nearly-white;
+        color: $white;
         font-size: toRem(14);
 
         a {
             font-size: toRem(14);
-            color: $nearly-white;
+            color: $white;
             &:hover {
-                color: $nearly-white;
+                color: $white;
             }
         }
         &__userInfo {
@@ -90,7 +93,7 @@
             padding-left: toRem(11);
 
             a {
-                color: $nearly-white;
+                color: $white;
                 margin-left: toRem(11);
             }
         }

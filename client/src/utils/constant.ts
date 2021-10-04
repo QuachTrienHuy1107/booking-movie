@@ -8,9 +8,10 @@ export enum API {
     /**
      * Movie
      */
+    SEARCH_MOVIE = "/movie",
     GET_ALL_PAGINATION = "/movie/paginate/",
     GET_MOVIE_DETAIL = "/movie",
-    GET_MOVIE_BY_LANGUAGES = "/movie/languages",
+    GET_FILTER_MOVIE = "/movie/filter",
     GET_ALL_LANGUAGES = "/movie/category/languages",
     GET_ALL_GENRES = "/movie/category/genres",
     GET_SHOWTIME = "/showtime",

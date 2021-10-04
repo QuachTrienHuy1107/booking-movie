@@ -1,4 +1,4 @@
-import { Tabs } from "antd";
+import { Skeleton } from "antd";
 import HeartIcon from "components/common/heart";
 import Schedule from "components/schedule";
 import moment from "moment";
@@ -13,9 +13,8 @@ import "../styles/pages/_booking.scss";
 const Booking: React.FC = () => {
     const dispatch = useAppDispatch();
     const { _id } = useParams() as GetDetailPayload;
-    const { movieDetail } = useAppSelector((state) => state.movieSlice);
+    const { movieDetail, isLoading } = useAppSelector((state) => state.movieSlice);
 
-    console.log("movieDetail", movieDetail);
 
     React.useEffect(() => {
         Object.keys(movieDetail).length === 0 && dispatch(getMovieDetailAction({ _id }));
@@ -25,27 +24,33 @@ const Booking: React.FC = () => {
         <div className="booking">
             <div className="top-title">
                 <Container>
-                    <h1 className="title">{movieDetail.title}</h1>
-                    <ul className="detail">
-                        <li className="detail__item detail__item--rating">
-                            <HeartIcon size={16} />
-                            <span>{movieDetail.rating} %</span>
-                            <br />
-                        </li>
-                        <li className="detail__item detail__item--genres">
-                            {movieDetail.genres?.map((item: string) => (
-                                <span>{item}</span>
-                            ))}
-                        </li>
-                        <li className="detail__item detail__item--release">
-                            <span>{moment(movieDetail.released).format("DD-MM-YYYY")}</span>
-                        </li>
-                        <li className="detail__item detail__item--time">
-                            <i className="fa fa-clock"></i>
-                            <span>{movieDetail.runtime} mins</span>
-                        </li>
-                    </ul>
-                    <span className="booking__text booking__text--voter">{movieDetail.imdb?.votes} VOTES</span>
+                    {!!isLoading ? (
+                        <Skeleton active />
+                    ) : (
+                        <>
+                            <h1 className="title">{movieDetail.title}</h1>
+                            <ul className="detail">
+                                <li className="detail__item detail__item--rating">
+                                    <HeartIcon size={16} />
+                                    <span>{movieDetail.rating} %</span>
+                                    <br />
+                                </li>
+                                <li className="detail__item detail__item--genres">
+                                    {movieDetail.genres?.map((item: string) => (
+                                        <span>{item}</span>
+                                    ))}
+                                </li>
+                                <li className="detail__item detail__item--release">
+                                    <span>{moment(movieDetail.released).format("DD-MM-YYYY")}</span>
+                                </li>
+                                <li className="detail__item detail__item--time">
+                                    <i className="fa fa-clock"></i>
+                                    <span>{movieDetail.runtime} mins</span>
+                                </li>
+                            </ul>
+                            <span className="booking__text booking__text--voter">{movieDetail.imdb?.votes} VOTES</span>
+                        </>
+                    )}
                 </Container>
             </div>
             <div className="main">

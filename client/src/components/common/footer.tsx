@@ -64,7 +64,7 @@ const Footer: React.FC = () => {
                     </div>
                     <div className="footer__detail__bottom">
                         <div className="footer__detail__bottom--left">
-                            <p>Copyright © 2020.All Rights Reserved By Me</p>
+                            <p>Copyright © 2021.All Rights Reserved By BookMyShow </p>
                         </div>
                         <div className="footer__detail__bottom--right">
                             <ul>

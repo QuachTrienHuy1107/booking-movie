@@ -20,10 +20,11 @@ const createNewShowTime = async (req, res) => {
             time,
         });
 
-        for (let i = 0; i < 80; i++) {
+        for (let i = 0; i < 160; i++) {
             const newTicket = new Ticket({
                 seat_number: `${i}`,
-                type: "Normal",
+                type: (i > 68 && i < 75) || (i > 84 && i < 91) || (i > 100 && i < 107) ? "Vip" : "Normal",
+                price: (i > 68 && i < 75) || (i > 84 && i < 91) || (i > 100 && i < 107) ? 90000 : 75000,
             });
             await newShowtime.tickets.push(newTicket);
         }

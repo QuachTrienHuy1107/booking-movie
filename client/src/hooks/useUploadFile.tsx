@@ -18,7 +18,6 @@ const validateUploadFile = (file: File) => {
         const allowSize = fileSize / 1024 / 1024 < 2;
 
         const fileExtension = fileType?.split("/").pop() as string;
-        console.log("fileExtension", fileExtension);
 
         if (!allowExtension.includes(fileExtension)) {
             message.error("You can only upload JPG/PNG file!");
@@ -40,7 +39,6 @@ export const useUpload = () => {
     const handleFileChange = (_file: any) => {
         if (!_file) return;
         const { file } = _file;
-        console.log("file", file);
         if (validateUploadFile(file)) {
             getBase64(file, (imgUrl: any) => {
                 setPreview(imgUrl);

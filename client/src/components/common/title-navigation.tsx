@@ -6,13 +6,18 @@ interface ITitleNavigation {
     subTitle: string;
     title: string;
     linkTo: string;
+    state?: any;
 }
 
-const TitleNavigation: React.FC<ITitleNavigation> = ({ title, subTitle, linkTo }) => {
+const TitleNavigation: React.FC<ITitleNavigation> = ({ title, subTitle, linkTo, state }) => {
     return (
         <div className="heading-title">
             <h1>{title}</h1>
-            <Link to={linkTo} >{subTitle}</Link>
+            {!!state ? (
+                <Link to={{ pathname: linkTo, state: state }}>{subTitle}</Link>
+            ) : (
+                <Link to={linkTo}>{subTitle}</Link>
+            )}
         </div>
     );
 };

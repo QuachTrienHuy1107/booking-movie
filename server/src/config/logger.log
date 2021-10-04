@@ -15,3 +15,11 @@
 [2021-10-02 22:43:33] [[31merror[39m] Cannot read properties of undefined (reading 'path')
 [2021-10-02 22:44:17] [[31merror[39m] Cannot read properties of undefined (reading 'path')
 [2021-10-03 02:27:37] [[31merror[39m] userUpdated is not defined
+[2021-10-04 00:57:14] [[31merror[39m] Illegal arguments: undefined, string
+[2021-10-04 00:58:09] [[31merror[39m] Illegal arguments: undefined, string
+[2021-10-04 00:59:05] [[31merror[39m] Illegal arguments: undefined, string
+[2021-10-04 01:00:07] [[31merror[39m] oldPassword is not defined
+[2021-10-04 01:00:29] [[31merror[39m] phone is not defined
+[2021-10-04 01:02:29] [[31merror[39m] Illegal arguments: undefined, string
+[2021-10-04 01:03:49] [[31merror[39m] string is not defined
+[2021-10-04 01:04:13] [[31merror[39m] Illegal arguments: undefined, string

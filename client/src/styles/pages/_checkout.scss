@@ -15,36 +15,62 @@
         margin-top: toRem(30);
         display: flex;
         justify-content: center;
+        margin-bottom: toRem(33);
     }
 
     .seat {
-        width: toRem(30);
-        height: toRem(30);
-        margin: 0px 10px 10px 0;
-        padding: 0;
-        display: inline-block;
-        font-size: toRem(10);
-        line-height: 25px;
-        font-weight: 400;
-        background: #fff;
-        vertical-align: top;
-        text-align: center;
+        &__btn {
+            width: toRem(30);
+            height: toRem(30);
+            margin: 0px 10px 10px 0;
+            padding: 0;
+            display: inline-block;
+            font-size: toRem(10);
+            line-height: 25px;
+            font-weight: 400;
+            background: #fff;
+            vertical-align: top;
+            text-align: center;
 
-        &--vip {
-            background-color: $yellow;
-            color: $black;
+            &--vip {
+                background-color: $yellow;
+                color: $black;
+            }
+
+            &--sold {
+                background: $nearly-white;
+                cursor: not-allowed;
+                color: $white !important;
+            }
+
+            &--selected {
+                color: $white;
+                background-color: $green !important;
+                border-color: $green;
+            }
         }
 
-        &--sold {
-            background: $nearly-white;
-            cursor: not-allowed;
-            color: $white !important;
-        }
+        &__model {
+            width: toRem(15);
+            height: toRem(15);
 
-        &--selected {
-            color: $white;
-            background-color: $green !important;
-            border-color: $green;
+            &--sold {
+                background: $nearly-white;
+                border-radius: 3px;
+            }
+            &--vip {
+                background: $yellow;
+                border-radius: 3px;
+            }
+            &--available {
+                background: $white;
+                border-radius: 3px;
+                border: 1px solid $green;
+            }
+            &--selected {
+                background: $green;
+                border-radius: 3px;
+            }
         }
     }
 
@@ -78,7 +104,7 @@
             }
 
             p {
-                font-size: toRem(12);
+                font-size: toRem(14);
                 margin-bottom: 0;
                 line-height: toRem(20);
             }

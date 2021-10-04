@@ -1,16 +1,17 @@
-import { DownOutlined, SearchOutlined } from "@ant-design/icons";
-import { Dropdown, Input, Menu } from "antd";
+import { DownOutlined } from "@ant-design/icons";
+import { AutoComplete, Dropdown, Menu } from "antd";
+import useSearch from "hooks/useSearch";
+import { debounce } from "lodash";
 import React from "react";
 import { Container } from "react-bootstrap";
+import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { logoutAction } from "store/features/auth.slice";
 import { persistor, useAppDispatch, useAppSelector } from "store/store";
 import { ROUTES } from "utils/constant";
-import avatar from "../../assets/images/avatar.png";
 import "../../styles/components/_header.scss";
+import { Loading } from "./loading";
 import Logo from "./logo";
-import { useHistory } from "react-router";
-const { Search } = Input;
 
 const menu = (
     <Menu>
@@ -29,6 +30,8 @@ const Header: React.FC = () => {
     const { credential } = useAppSelector((state) => state.authSlice);
     const dispatch = useAppDispatch();
     const history = useHistory();
+    const { onSearch, options, loading } = useSearch();
+    const [value, setValue] = React.useState<any>(undefined);
 
     const handleLogout = () => {
         persistor.purge();
@@ -36,7 +39,11 @@ const Header: React.FC = () => {
         localStorage.clear();
     };
 
-    const onSearch = (value: any) => console.log(value);
+    const onSelect = (value: string, options: any) => {
+        const { label, key } = options;
+        history.push(`${ROUTES.MOVIEDETAIL}/${key}`);
+        setValue(value);
+    };
 
     return (
         <div className="header">
@@ -44,18 +51,27 @@ const Header: React.FC = () => {
                 <div className="header__wrapper">
                     <div className="header__left">
                         <Logo />
-                        <Input prefix={<SearchOutlined />} placeholder="Search..." className="search-input" />
+
+                        <AutoComplete
+                            options={options}
+                            className="search-input"
+                            onSelect={onSelect}
+                            onSearch={debounce(onSearch, 500)}
+                            placeholder="Search movie"
+                            allowClear={true}
+                            notFoundContent={loading ? <Loading /> : options.length === 0 && "No data"}
+                        />
                     </div>
 
                     <div className="header__right">
                         <div className="header__right__userInfo">
                             {Object.keys(credential).length === 0 ? (
                                 <Link to={ROUTES.LOGIN}>
-                                    <img
+                                    {/* <img
                                         src={credential.user?.avatar}
                                         alt="avatar"
                                         className="header__right__userInfo--avatar"
-                                    />
+                                    /> */}
                                     <p className="header__right__userInfo--name">Login</p>
                                 </Link>
                             ) : (

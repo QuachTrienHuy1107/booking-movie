@@ -1,27 +1,28 @@
 import { Tabs } from "antd";
 import usePagination from "hooks/usePagination";
 import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import Slider from "react-slick";
 import { getPaginateMoviesAction } from "store/features/movie.slice";
 import { useAppDispatch, useAppSelector } from "store/store";
 import { MovieResponse } from "types/movie.type";
 import { ROUTES } from "utils/constant";
 import "../styles/components/_movies.scss";
+import { Loading } from "./common/loading";
 import TitleNavigation from "./common/title-navigation";
+import { LoadingPage } from "./loading-page";
 import { MovieCard } from "./movie-card";
 
 const { TabPane } = Tabs;
 
 const settings = {
-    arrows: true,
+    arrows: false,
     centerMode: true,
     infinite: true,
     centerPadding: "0",
     slidesToShow: 1,
     speed: 400,
-    rows: 5,
-
+    rows: 2,
     slidesPerRow: 5,
     responsive: [
         {
@@ -54,7 +55,7 @@ const settings = {
 
 export const Movies: React.FC = () => {
     const dispatch = useAppDispatch();
-    const { moviePagination, isLoading } = useAppSelector((state) => state.movieSlice) as any;
+    const { moviePagination, isLoading } = useAppSelector((state) => state.movieSlice);
     const { resPagination } = usePagination(1, 20);
 
     console.log("moviePagination", moviePagination);
@@ -69,8 +70,12 @@ export const Movies: React.FC = () => {
     return (
         <div className="movies">
             <Row>
+                {!!isLoading && <Loading />}
                 <Col>
-                    <TitleNavigation title="Now Showing" linkTo={ROUTES.MOVIELIST} subTitle="See all >" />
+                    <div style={{ paddingRight: 25 }}>
+                        <TitleNavigation title="Now Showing" linkTo={ROUTES.MOVIELIST} subTitle="See all" />
+                    </div>
+
                     <Slider {...settings}>
                         {moviePagination.movies?.map((movie: MovieResponse) => (
                             <div key={movie._id} className="movies__item">

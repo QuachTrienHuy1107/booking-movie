@@ -6,7 +6,7 @@
     justify-content: space-between;
     // border-top: 1px solid $nearly-white;
 
-    padding: toRem(32) 0px toRem(16);
+    padding: toRem(32) toRem(0) toRem(16) 0;
 
     h1 {
         color: $black;

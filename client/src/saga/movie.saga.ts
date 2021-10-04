@@ -5,9 +5,9 @@ import movieApi from "../service/movie.service";
 import {
     booking,
     bookingSuccess,
-    getMovieByLanguage,
-    getMovieByLanguageFailure,
-    getMovieByLanguageSuccess,
+    getFilterMovie,
+    getFilterMovieFailure,
+    getFilterMovieSuccess,
     getMovieDetailAction,
     getMovieDetailActionSuccess,
     getMovieDetailFailure,
@@ -18,7 +18,7 @@ import {
     getShowtimeFailure,
     getShowtimeSuccess,
 } from "../store/features/movie.slice";
-import { BookingPayload, MovieWithLanguagePayload, PaginationRequestType } from "../types/movie.type";
+import { BookingPayload, MovieFilterPayload, PaginationRequestType } from "../types/movie.type";
 
 function* onGetDataPagination({ payload }: PayloadAction<PaginationRequestType>) {
     try {
@@ -36,6 +36,7 @@ function* onGetDataPagination({ payload }: PayloadAction<PaginationRequestType>)
 function* onGetMovieDetail({ payload }: PayloadAction<GetDetailPayload>) {
     try {
         const { response, error } = yield call(movieApi.getMovieDetail, payload);
+        yield delay(500);
         if (error) throw new Error(error.message);
 
         yield put(getMovieDetailActionSuccess(response.data));
@@ -44,14 +45,14 @@ function* onGetMovieDetail({ payload }: PayloadAction<GetDetailPayload>) {
     }
 }
 
-function* onGetMovieByLanguage({ payload }: PayloadAction<MovieWithLanguagePayload>) {
+function* onGetFilterMovie({ payload }: PayloadAction<MovieFilterPayload>) {
     try {
-        const { response, error } = yield call(movieApi.getMovieByLanguage, payload);
+        const { response, error } = yield call(movieApi.getFilterMovie, payload);
         if (error) throw new Error(error.message);
 
-        yield put(getMovieByLanguageSuccess(response.data));
+        yield put(getFilterMovieSuccess(response.data));
     } catch (error: any) {
-        yield put(getMovieByLanguageFailure(error.message));
+        yield put(getFilterMovieFailure(error.message));
     }
 }
 
@@ -80,7 +81,7 @@ function* onBooking({ payload }: PayloadAction<BookingPayload>) {
 function* watchOnLyrics() {
     yield takeLatest(getPaginateMoviesAction.type, onGetDataPagination);
     yield takeLatest(getMovieDetailAction.type, onGetMovieDetail);
-    yield takeLatest(getMovieByLanguage.type, onGetMovieByLanguage);
+    yield takeLatest(getFilterMovie.type, onGetFilterMovie);
     yield takeLatest(getShowtime.type, onGetShowtime);
     yield takeLatest(booking.type, onBooking);
 }

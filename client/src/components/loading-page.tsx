@@ -1,6 +1,6 @@
 import { Space } from "antd";
 import React from "react";
-import loading from "../assets/images/loading.gif";
+import loading from "../assets/images/loading-page.gif";
 
 export const LoadingPage: React.FC = () => {
     return (
@@ -11,7 +11,8 @@ export const LoadingPage: React.FC = () => {
                 height: "100%",
                 top: 0,
                 left: 0,
-                zIndex: 100,
+                zIndex: 9,
+                backgroundColor: "#fff",
             }}
         >
             <div
@@ -22,7 +23,6 @@ export const LoadingPage: React.FC = () => {
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "center",
-                    background: "#F5F3ED",
                 }}
             >
                 <style></style>

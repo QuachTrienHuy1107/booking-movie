@@ -4,7 +4,7 @@ import ReviewList from "components/review-list";
 import usePagination from "hooks/usePagination";
 import React from "react";
 import { Container } from "react-bootstrap";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { addNewReview, getReviewByMovie } from "store/features/review.slice";
 import { useAppDispatch, useAppSelector } from "store/store";
 import { AdditionalReviewPayload, ReviewPayload } from "types/review.type";
@@ -16,18 +16,31 @@ const ReviewPage: React.FC = () => {
     const dispatch = useAppDispatch();
     const { credential } = useAppSelector((state) => state.authSlice);
     const { resPagination, handlePageChange } = usePagination(1, 4);
-    const { reviews } = useAppSelector((state) => state.reviewSlice);
+    const { reviews, isLoading } = useAppSelector((state) => state.reviewSlice);
+    const [_reviewList, setReviewList] = React.useState<any[] | null>([] || null);
     const [isModalVisible, setIsModalVisible] = React.useState(false);
+    const location = useLocation();
+    console.log("location", location);
+    const isFirst = React.useRef(false);
 
     React.useEffect(() => {
+        if (location.state && !isFirst.current) {
+            const { reviewList } = location.state as any;
+            if (!!reviewList) {
+                setReviewList((prev) => (prev = reviewList));
+                isFirst.current = true;
+                return;
+            }
+        }
+        setReviewList(null);
+
         const data = {
             ...resPagination,
             _id,
+            isLoadmore: true,
         };
         dispatch(getReviewByMovie(data));
-    }, [dispatch, _id, resPagination]);
-
-    const reviewsMemo = React.useMemo(() => reviews, [reviews]);
+    }, [dispatch, _id, resPagination, location.state]);
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -56,7 +69,7 @@ const ReviewPage: React.FC = () => {
                         <HeartIcon size={40} />
                         <span> 91% </span> Rating
                     </h1>
-                    <p>Ten phim</p>
+                    {/* <p>Ten phim</p> */}
                 </div>
                 <div className="reviews__rating">
                     <div className="reviews__rating--content">
@@ -68,7 +81,12 @@ const ReviewPage: React.FC = () => {
                     </Button>
                 </div>
                 <h1 className="reviews__maintext reviews__maintext--title">Most helpful reviews</h1>
-                <ReviewList reviews={reviewsMemo} handlePageChange={handlePageChange} />
+                <ReviewList
+                    reviews={!!_reviewList ? _reviewList : reviews.reviewList}
+                    total={reviews.total}
+                    isLoading={isLoading}
+                    handlePageChange={handlePageChange}
+                />
 
                 <Modal
                     title="How was the movie?"
@@ -78,12 +96,7 @@ const ReviewPage: React.FC = () => {
                     destroyOnClose={true}
                 >
                     <Form onFinish={onFinish} name="review">
-                        <Form.Item
-                            {...formItemLayout}
-                            name="rating"
-                            label="How would you rate the movie"
-                            rules={[{ required: true, message: "Please rating!" }]}
-                        >
+                        <Form.Item {...formItemLayout} name="rating" label="How would you rate the movie">
                             <Slider defaultValue={0} />
                         </Form.Item>
                         <Form.Item

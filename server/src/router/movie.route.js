@@ -10,6 +10,7 @@ const {
     getLanguages,
     getGenres,
     booking,
+    searchMovie,
 } = require("../controller/movie.controller");
 const uploadImage = require("../middleware/update-image");
 const { verifyToken } = require("../middleware/verify-token");
@@ -21,7 +22,7 @@ const movieRoute = express.Router();
  * @route /api/movie
  * @access Private
  */
-movieRoute.get("/", getAllMovie);
+movieRoute.get("/", searchMovie);
 
 /**
  * @method GET
@@ -32,10 +33,10 @@ movieRoute.get("/paginate", getPaginateMovie);
 
 /**
  * @method GET
- * @route /api/movie/languages
+ * @route /api/movie/filter
  * @access Private
  */
-movieRoute.get("/languages", getMovieByLanguages);
+movieRoute.get("/filter", getMovieByLanguages);
 
 /**
  * @method GET

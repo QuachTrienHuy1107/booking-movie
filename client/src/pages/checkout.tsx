@@ -1,31 +1,43 @@
-import { PageHeader, Space, Button, Divider, Collapse } from "antd";
+import { Button, Collapse, Divider, message, PageHeader, Space } from "antd";
 import Countdown from "antd/lib/statistic/Countdown";
 import { useHandlePickSeat } from "hooks/useHandlePickSeat";
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { booking, getShowtime } from "store/features/movie.slice";
 import { useAppDispatch, useAppSelector } from "store/store";
 import { BookingPayload, TicketType } from "types/movie.type";
 import { GetDetailPayload } from "types/shared/get-detail.type";
-import "../styles/pages/_checkout.scss";
 import screenThumb from "../assets/images/screen-thumb.png";
+import "../styles/pages/_checkout.scss";
+import Swal from "sweetalert2";
+import { ROUTES } from "utils/constant";
+import moment from "moment";
 
 const { Panel } = Collapse;
 
-const deadline = Date.now() + 20000 * 60; // Moment is also OK
+const deadline = Date.now() + 10000 * 60; // Moment is also OK
 const Checkout: React.FC = () => {
     const dispatch = useAppDispatch();
-    const { showtime, isLoading, error } = useAppSelector((state) => state.movieSlice);
+    const { showtime, isSuccess } = useAppSelector((state) => state.movieSlice);
     const { _id } = useParams() as GetDetailPayload;
     const { handlePickSeat, arraySeatSelected } = useHandlePickSeat();
     const { credential } = useAppSelector((state) => state.authSlice);
+    const history = useHistory();
 
     React.useEffect(() => {
         dispatch(getShowtime({ _id }));
     }, [_id, dispatch]);
 
-    console.log("arraySeatSelected", arraySeatSelected);
+    console.log("showtime", showtime);
+
+    React.useEffect(() => {
+        if (!!isSuccess) {
+            message.success("Booking successfully!!").then(() => {
+                history.replace(ROUTES.HOME);
+            });
+        }
+    }, [history, isSuccess]);
 
     const handleBooking = () => {
         const data: BookingPayload = {
@@ -43,7 +55,7 @@ const Checkout: React.FC = () => {
         <div className="checkout">
             <PageHeader
                 className="page-header"
-                onBack={() => null}
+                onBack={() => history.goBack()}
                 title={showtime.movie?.title}
                 extra={<Countdown value={deadline} />}
             />
@@ -71,10 +83,10 @@ const Checkout: React.FC = () => {
                                                     }}
                                                     key={seat._id}
                                                     disabled={!!seat.status}
-                                                    className={`seat ${
-                                                        (seat.type === "Vip" && !seat.status && "seat--vip") ||
-                                                        (!!seat.status && "seat--sold") ||
-                                                        (!!selected && "seat--selected")
+                                                    className={`seat__btn ${
+                                                        (!!selected && "seat__btn--selected") ||
+                                                        (seat.type === "Vip" && !seat.status && "seat__btn--vip") ||
+                                                        (!!seat.status && "seat__btn--sold")
                                                     }`}
                                                 >
                                                     {seat.seat_number}
@@ -85,6 +97,32 @@ const Checkout: React.FC = () => {
                                     })}
                                 </div>
                             </div>
+                            <Row>
+                                <Col md={3} style={{ textAlign: "center" }}>
+                                    <Space align="center">
+                                        <div className="seat__model seat__model--sold"></div>
+                                        <span>Sold</span>
+                                    </Space>
+                                </Col>
+                                <Col md={3} style={{ textAlign: "center" }}>
+                                    <Space align="center">
+                                        <div className="seat__model seat__model--vip"></div>
+                                        <span>Sold</span>
+                                    </Space>
+                                </Col>
+                                <Col md={3} style={{ textAlign: "center" }}>
+                                    <Space align="center">
+                                        <div className="seat__model seat__model--available"></div>
+                                        <span>Sold</span>
+                                    </Space>
+                                </Col>
+                                <Col md={3} style={{ textAlign: "center" }}>
+                                    <Space align="center">
+                                        <div className="seat__model seat__model--selected"></div>
+                                        <span>Sold</span>
+                                    </Space>
+                                </Col>
+                            </Row>
                         </Container>
                     </Col>
                     <Col lg={4} md={6}>
@@ -96,6 +134,10 @@ const Checkout: React.FC = () => {
                                 <h1>{showtime.movie?.title}</h1>
                                 <p>{showtime.cinema?.cinema_name} </p>
                                 <p>{showtime.cinema?.address}</p>
+                                <p className="payment__info--datetime">
+                                    {moment(showtime.time).format("DD-MM-YYYY")} -{" "}
+                                    {moment(showtime.time).format("hh:MM A")}{" "}
+                                </p>
                             </div>
                             <Divider />
 
@@ -120,10 +162,10 @@ const Checkout: React.FC = () => {
 
                             <div className="payment__item payment__item--subtotal">
                                 <span>Subtotal</span>
-                                <span className="payment__item__price">123123</span>
+                                <span className="payment__item__price">{subTotal.toLocaleString()}</span>
                             </div>
 
-                            <div className="payment__item--food">
+                            {/* <div className="payment__item--food">
                                 <Collapse bordered={false} defaultActiveKey={["1"]} ghost>
                                     <Panel
                                         showArrow={false}
@@ -138,14 +180,44 @@ const Checkout: React.FC = () => {
                                         123
                                     </Panel>
                                 </Collapse>
-                            </div>
+                            </div> */}
 
                             <span className="circle-left"></span>
                             <span className="circle-right"></span>
                         </div>
-                        <Button className="checkout__btn" onClick={() => handleBooking()}>
+                        {/* <Button className="checkout__btn" onClick={() => handleBooking()}>
                             <div>
                                 Total: <span>{subTotal}</span>
+                            </div>
+                            <div>
+                                <span>Process</span>
+                            </div>
+                        </Button> */}
+                        <Button
+                            className="checkout__btn"
+                            onClick={() => {
+                                if (arraySeatSelected.length !== 0) {
+                                    Swal.fire({
+                                        title: "Booking now?",
+                                        text: "The tickets cannot refund!",
+                                        icon: "warning",
+                                        showCancelButton: true,
+                                        confirmButtonColor: "#3085d6",
+                                        cancelButtonText: "Cancel",
+                                        cancelButtonColor: "#d33",
+                                        confirmButtonText: "OK!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            handleBooking();
+                                        }
+                                    });
+                                } else {
+                                    message.warning("Please pick your seat before payment!");
+                                }
+                            }}
+                        >
+                            <div>
+                                Total: <span>{subTotal.toLocaleString()}</span>
                             </div>
                             <div>
                                 <span>Process</span>

@@ -9,9 +9,10 @@ import "../styles/components/_movie-recommend.scss";
 import TitleNavigation from "./common/title-navigation";
 import { MovieCard } from "./movie-card";
 import { Col, Container, Row } from "react-bootstrap";
+import { RightOutlined } from "@ant-design/icons";
 
 const settings = {
-    dots: false,
+    dots: true,
     infinite: false,
     speed: 500,
     slidesToShow: 5,
@@ -36,29 +37,17 @@ const MovieRecommend: React.FC<IMovieRec> = ({ movieRec, isHome }) => {
         dispatch(getPaginateMoviesAction(data));
     }, [dispatch, movieRec, resPagination]);
 
-    console.log("movieRec", movieRec);
-
     return (
-        <div className="movie-rec">
-            {!!movieRec ? (
-                <Slider {...settings}>
-                    {movieRec?.map((movie: MovieResponse) => (
-                        <div key={movie._id}>
-                            <MovieCard isHome={isHome} movie={movie} />
-                        </div>
-                    ))}
-                </Slider>
-            ) : (
-                <Slider {...settings}>
-                    {moviePagination.movies?.map((movie: MovieResponse) => (
-                        <div key={movie._id}>
-                            <MovieCard isHome={isHome} movie={movie} />
-                        </div>
-                    ))}
-                </Slider>
-            )}
+        <div className={`movie-rec ${!isHome ? "movie-rec--detail" : ""}`}>
+            <Slider {...settings}>
+                {moviePagination.movies?.map((movie: MovieResponse) => (
+                    <div key={movie._id} className={!isHome ? "movie-rec--detail" : ""}>
+                        <MovieCard isHome={isHome} movie={movie} />
+                    </div>
+                ))}
+            </Slider>
 
-            {!isHome && <div className="fence"></div>}
+            <div className={!isHome ? "fence" : "fence fence--home"}></div>
         </div>
     );
 };

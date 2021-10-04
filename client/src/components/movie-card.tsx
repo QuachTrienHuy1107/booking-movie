@@ -22,12 +22,7 @@ export const MovieCard: React.FC<IMovieCard> = memo(({ movie, isHome }): JSX.Ele
                                 pathname: `${ROUTES.MOVIEDETAIL}/${movie._id}`,
                             }}
                         >
-                            <img
-                                className="movie__poster--img"
-                                alt=""
-                                src={movie.poster}
-                                // style={{ height: isHome ? "100%" : "333px" }}
-                            />
+                            <img className="movie__poster--img" alt="" src={movie.poster} />
                         </Link>
                     </div>
                 }

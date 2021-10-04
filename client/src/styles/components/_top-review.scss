@@ -1,9 +1,10 @@
 @import "../main";
 
 .top-review {
-    position: relative;
+    max-height: toRem(400);
+    height: toRem(380);
     &__title {
-        padding-right: toRem(50);
+        padding-right: toRem(10);
 
         &--subtitle {
             color: $nearly-grey;
@@ -16,12 +17,11 @@
 
     &__reviews {
         margin: toRem(20) 0;
+        position: relative;
 
         &__item {
             border: 1px solid $xlight-grey;
             border-radius: 4px;
-            width: toRem(400) !important;
-            min-width: toRem(400);
             padding: toRem(24);
             min-height: toRem(240);
             display: flex !important;
@@ -67,6 +67,13 @@
                     }
                 }
             }
+        }
+
+        //OVERRIDE
+
+        .slick-slide {
+            padding-right: toRem(10);
+            // width: toRem(222) !important;
         }
 
         .slick-list {

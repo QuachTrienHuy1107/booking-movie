@@ -8,6 +8,7 @@ export interface ICredential {
     username: string;
     avatar?: string;
     role?: string;
+    phone?: string;
     password?: string;
     googleId?: string;
     showtimes?: ShowtimeResponse[];
@@ -36,4 +37,5 @@ export interface AuthState {
     isLoading: boolean;
     error?: Error | null | string;
     isAuth?: boolean;
+    isSuccess?: boolean;
 }

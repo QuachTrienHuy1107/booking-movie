@@ -19,7 +19,6 @@ const Login: React.FC = () => {
         disptach(loginAction(values));
     };
 
-    console.log("isLoading", isLoading);
 
     const handleLoginWithSocial = async () => {
         let timer: NodeJS.Timeout | null = null;

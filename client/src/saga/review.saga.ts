@@ -1,5 +1,5 @@
 import { PayloadAction } from "@reduxjs/toolkit";
-import { all, call, fork, put, takeLatest } from "redux-saga/effects";
+import { all, call, delay, fork, put, takeLatest } from "redux-saga/effects";
 import reviewApi from "service/review.service";
 import {
     addNewReview,
@@ -7,14 +7,14 @@ import {
     addNewReviewSuccess,
     getReviewByMovie,
     getReviewByMovieFailure,
-    getReviewByMovieSuccess,
+    getReviewByMovieSuccess
 } from "store/features/review.slice";
 import { AdditionalReviewPayload, ReviewPayload } from "types/review.type";
 
 function* onGetReviewByMovie({ payload }: PayloadAction<ReviewPayload>) {
     try {
         const { response, error } = yield call(reviewApi.getReviewByMovieId, payload);
-        console.log("response", response);
+        yield delay(500);
         if (error) throw new Error(error.message);
 
         yield put(getReviewByMovieSuccess(response.data));
@@ -27,7 +27,6 @@ function* onGetReviewByMovie({ payload }: PayloadAction<ReviewPayload>) {
 function* onAddReview({ payload }: PayloadAction<AdditionalReviewPayload>) {
     try {
         const { response, error } = yield call(reviewApi.addNewReview, payload);
-        console.log("response", response);
         if (error) throw new Error(error.message);
 
         yield put(addNewReviewSuccess(response.data));

@@ -1,5 +1,7 @@
 import { Tabs } from "antd";
+import { Loading } from "components/common/loading";
 import TitleNavigation from "components/common/title-navigation";
+import { LoadingPage } from "components/loading-page";
 import MovieRecommend from "components/movie-recommend";
 import Poster from "components/poster";
 import TopReview from "components/top-review";
@@ -17,24 +19,28 @@ const { TabPane } = Tabs;
 const MovieDetail: React.FC = () => {
     const dispatch = useAppDispatch();
     const { _id } = useParams() as GetDetailPayload;
-    const { movieDetail } = useAppSelector((state) => state.movieSlice);
+    const { movieDetail, isLoading } = useAppSelector((state) => state.movieSlice);
 
     React.useEffect(() => {
         dispatch(getMovieDetailAction({ _id }));
     }, [_id, dispatch]);
 
-    console.log("movieDetail", movieDetail);
-
     return (
         <>
-            <Poster movieDetail={movieDetail} />
-            <Container>
-                <TopReview _id={_id} />
-                <div className="spacing"></div>
+            {(!!isLoading && <LoadingPage />) || (
+                <>
+                    <Poster movieDetail={movieDetail} />
+                    <Container>
+                        <TopReview _id={_id} />
+                        <div className="spacing"></div>
+                        <div style={{ paddingRight: 10 }}>
+                            <TitleNavigation title="Movie Recommend" subTitle="See all" linkTo={ROUTES.MOVIELIST} />
+                        </div>
 
-                <TitleNavigation title="Movie Recommend" subTitle="See all" linkTo={ROUTES.MOVIELIST} />
-                <MovieRecommend movieRec={movieDetail.movieRecommend} />
-            </Container>
+                        <MovieRecommend movieRec={movieDetail.movieRecommend} />
+                    </Container>
+                </>
+            )}
         </>
     );
 };

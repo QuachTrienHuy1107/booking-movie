@@ -230,12 +230,9 @@ const updateProfile = async (req, res) => {
     try {
         const { file } = req; //Get the file to request to server
 
-        const { username, email, newPassword, confirmPassword, oldPassword } = req.body;
+        const { username, email, phone, newPassword, oldPassword } = req.body;
         let imgUrl = null;
-
-        //Validation
-        if (confirmPassword !== newPassword)
-            return res.status(404).send("The two passwords that you entered do not match!");
+        let hashPassword = null;
 
         const userId = req.user?.userId;
 
@@ -251,16 +248,19 @@ const updateProfile = async (req, res) => {
         }
 
         // Verify password
-        const isPasswordCorrect = bcrypt.compareSync(oldPassword, userFound.password);
-        if (!isPasswordCorrect) {
-            return res.status(403).json({ success: false, message: "Incorrect password" });
+        if (!!oldPassword && !!newPassword) {
+            const isPasswordCorrect = bcrypt.compareSync(oldPassword, userFound.password);
+            if (!isPasswordCorrect) {
+                return res.status(403).json({ success: false, message: "Incorrect password" });
+            }
+
+            //Setup
+            const salt = bcrypt.genSaltSync(10);
+            hashPassword = bcrypt.hashSync(newPassword, salt);
         }
 
-        //Setup
-        const salt = bcrypt.genSaltSync(10);
-        const hashPassword = bcrypt.hashSync(newPassword, salt);
-
         if (!!file) {
+            console.log("updated");
             cloudinary.config({
                 cloud_name: process.env.CLOUDINARY_NAME,
                 api_key: process.env.CLOUDINARY_API_KEY,
@@ -277,7 +277,8 @@ const updateProfile = async (req, res) => {
             ...userFound._doc,
             username,
             email,
-            password: hashPassword,
+            password: hashPassword || userFound.password,
+            phone: phone || null,
             updatedAt: Date.now(),
             avatar:
                 imgUrl ||
@@ -286,7 +287,7 @@ const updateProfile = async (req, res) => {
         };
 
         const user = await User.findOneAndUpdate({ _id: userId }, data, { new: true });
-        if (!!user) return res.status(200).send(user);
+        if (!!user) return res.status(200).json({ user, isSuccess: true });
     } catch (error) {
         logger.error(error.message);
         res.status(500).json({ success: false, message: "Internal server error" });

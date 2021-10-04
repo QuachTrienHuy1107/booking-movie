@@ -1,7 +1,7 @@
 import { EyeOutlined } from "@ant-design/icons";
-import { Button, Progress, Rate } from "antd";
+import { Progress, Space } from "antd";
 import React, { memo } from "react";
-import { Col, Row, Container } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { useHistory } from "react-router";
 import { ROUTES } from "utils/constant";
 import "../styles/components/_poster.scss";
@@ -14,7 +14,6 @@ interface IMovieDetail {
 const Poster: React.FC<IMovieDetail> = memo(({ movieDetail }) => {
     const history = useHistory();
 
-    console.log("movieDetail", movieDetail);
     return (
         <>
             <div className="poster">
@@ -68,7 +67,9 @@ const Poster: React.FC<IMovieDetail> = memo(({ movieDetail }) => {
 
                                     <div className="poster__item poster__item--overview my-4">
                                         <h3 className="poster__text poster__text--heading">Overview</h3>
-                                        <p className="poster__text poster__text--desc">{movieDetail.fullplot}</p>
+                                        <p className="poster__text poster__text--desc" title={movieDetail.fullplot}>
+                                            {movieDetail.fullplot}
+                                        </p>
                                     </div>
 
                                     <div className="poster__item poster__item--director">
@@ -81,18 +82,25 @@ const Poster: React.FC<IMovieDetail> = memo(({ movieDetail }) => {
                                     <div className="poster__item poster__item--view"></div>
 
                                     <div className="poster__item poster__item--booking">
-                                        <button
-                                            className="poster__item--booking__btn"
-                                            onClick={() => history.push(`${ROUTES.BOOKING}/${movieDetail._id}`)}
-                                        >
-                                            Booking tickets
-                                        </button>
-                                        <div>
+                                        {movieDetail.cinema && movieDetail.cinema?.length > 0 ? (
+                                            <button
+                                                className="poster__item--booking-available"
+                                                onClick={() => history.push(`${ROUTES.BOOKING}/${movieDetail._id}`)}
+                                            >
+                                                Booking tickets
+                                            </button>
+                                        ) : (
+                                            <button className="poster__item--booking-commingsoon" disabled>
+                                                Comming soon
+                                            </button>
+                                        )}
+
+                                        <Space align="center">
                                             <EyeOutlined className="poster__item__icon" />
                                             <span className="poster__text poster__text--desc">
                                                 {!!movieDetail.imdb && movieDetail.imdb?.votes + 400}
                                             </span>
-                                        </div>
+                                        </Space>
                                     </div>
                                 </div>
                             </Col>
