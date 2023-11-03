@@ -1,0 +1,12 @@
+{
+    "name": "movie-cinema",
+    "version": "1.0.0",
+    "scripts": {
+        "server": "cd server && yarn dev",
+        "client": "cd client && yarn start",
+        "dev": "concurrently \"yarn server\" \"yarn client\" "
+    },
+    "dependencies": {
+        "concurrently": "^8.2.2"
+    }
+}
