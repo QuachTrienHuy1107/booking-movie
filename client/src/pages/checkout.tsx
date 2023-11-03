@@ -53,12 +53,12 @@ const Checkout: React.FC = () => {
 
     return (
         <div className="checkout">
-            <PageHeader
+            {/* <PageHeader
                 className="page-header"
                 onBack={() => history.goBack()}
                 title={showtime.movie?.title}
                 extra={<Countdown value={deadline} />}
-            />
+            /> */}
             <Container>
                 {!!isLoading ? (
                     <Loading />

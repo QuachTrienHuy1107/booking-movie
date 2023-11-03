@@ -1,5 +1,5 @@
 import { PayloadAction } from "@reduxjs/toolkit";
-import { all, call, fork, put, takeLatest, delay } from "redux-saga/effects";
+import { all, call, fork, put, takeLatest } from "redux-saga/effects";
 import authSvc from "service/auth.service";
 import {
     getMe,
@@ -10,9 +10,6 @@ import {
     registerAction,
     registerActionFailure,
     registerActionSuccess,
-    resetPassword,
-    resetPasswordFailure,
-    resetPasswordSuccess,
     updateProfile,
     updateProfileFailure,
     updateProfileSuccess,
@@ -22,7 +19,6 @@ import { LoginPayload, RegisterPayload, ResetPasswordPayload } from "types/auth.
 function* onGetMe() {
     try {
         const { response, error } = yield call(authSvc.me);
-        yield delay(500);
         if (error) throw new Error(error.message);
 
         yield put(getMeSuccess(response.data));
@@ -35,7 +31,6 @@ function* onGetMe() {
 function* onLogin({ payload }: PayloadAction<LoginPayload>) {
     try {
         const { response, error } = yield call(authSvc.login, payload);
-        yield delay(500);
         if (error) throw new Error(error.message);
 
         yield put(loginActionSuccess(response.data.user));
@@ -50,7 +45,6 @@ function* onLogin({ payload }: PayloadAction<LoginPayload>) {
 function* onRegister({ payload }: PayloadAction<RegisterPayload>) {
     try {
         const { response, error } = yield call(authSvc.register, payload);
-        yield delay(500);
         if (error) throw new Error(error.message);
 
         yield put(registerActionSuccess(response.data));
@@ -63,7 +57,6 @@ function* onRegister({ payload }: PayloadAction<RegisterPayload>) {
 function* onUpdateProfile({ payload }: PayloadAction<any>) {
     try {
         const { response, error } = yield call(authSvc.updateProfile, payload);
-        yield delay(500);
         if (error) throw new Error(error.message);
 
         yield put(updateProfileSuccess(response.data));
@@ -76,7 +69,7 @@ function* onUpdateProfile({ payload }: PayloadAction<any>) {
 function* onResetPassword({ payload }: PayloadAction<ResetPasswordPayload>) {
     // try {
     //     const { response, error } = yield call(authSvc.resetPassword, payload);
-    //     yield delay(500);
+    //;
     //     if (error) throw new Error(error.message);
     //     yield put(resetPasswordSuccess(response.data));
     // } catch (error: any) {

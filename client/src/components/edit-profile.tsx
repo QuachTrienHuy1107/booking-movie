@@ -1,4 +1,4 @@
-import {Button, Col, Form, Input, Modal, Row, Upload, message} from "antd";
+import {Button, Col, Form, Input, Modal, Row, Upload} from "antd";
 import {useUpload} from "hooks/useUploadFile";
 import {FC, useEffect, useState} from "react";
 import {updateProfile} from "store/features/auth.slice";
@@ -15,42 +15,24 @@ interface IEditProfile {
 const EditProfile: FC<IEditProfile> = ({isOpen, onClose, me}) => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
-  const {handleFileChange, avatar, preview, loading} = useUpload();
-  const {isLoading, error, isSuccess} = useAppSelector((state) => state.authSlice);
+  const values = Form.useWatch([], form);
+  const {handleFileChange, avatar, preview, loading: fileUploading} = useUpload();
+  const {isLoading} = useAppSelector((state) => state.authSlice);
   const [isChangePassword, setChangesPassword] = useState(false);
-  // const isFirst = useRef(true);
+  const [submittable, setSubmittable] = useState(false);
+
+  const disabled = isLoading || fileUploading || !submittable;
 
   useEffect(() => {
-    // if (isFirst.current) return;
-    if (!!error) return message.error(error);
-  }, [error]);
-
-  console.log('isSuccess', isSuccess);
-
-  useEffect(() => {
-    // if (isFirst.current) return;
-    if (!!isSuccess)
-      message
-        .success({
-          content: "Change profile successfully",
-          duration: 0.5,
-        })
-  }, [isSuccess, onClose]);
-
-
-
-  const onFinish = async (values: any) => {
-    // isFirst.current = false;
-    for (var key in values) {
-      if ((values.hasOwnProperty(key) && !values[key]) || (values[key].trim() as string) === "") {
-        delete values[key];
-      }
-    }
-
-    const data = !!avatar ? {...values, avatar} : values;
-
-    dispatch(updateProfile(data));
-  };
+    form.validateFields({validateOnly: true}).then(
+      () => {
+        setSubmittable(true);
+      },
+      () => {
+        setSubmittable(false);
+      },
+    );
+  }, [form, values]);
 
   useEffect(() => {
     if (!!me) {
@@ -72,12 +54,32 @@ const EditProfile: FC<IEditProfile> = ({isOpen, onClose, me}) => {
     }
   };
 
+  const handleClose = () => {
+    form.setFieldsValue({
+      username: me.username,
+      email: me.email,
+      avatar: me.avatar,
+      phone: me.phone || null,
+    });
+    onClose();
+  };
+
+  const onFinish = async (values: any) => {
+    for (var key in values) {
+      if ((values.hasOwnProperty(key) && !values[key]) || (values[key].trim() as string) === "") {
+        delete values[key];
+      }
+    }
+
+    const data = !!avatar ? {...values, avatar} : values;
+
+    dispatch(updateProfile(data));
+  };
+
   return (
     <>
-      <Modal title="Edit profile" visible={isOpen} onCancel={onClose} footer={null} destroyOnClose={true}>
-        {!!isLoading ? (
-          <Loading />
-        ) : (
+      <Modal title="Edit profile" visible={isOpen} onCancel={() => handleClose()} footer={null} destroyOnClose={true}>
+        {!!isLoading ? <Loading /> : (
           <Form form={form} layout="vertical" hideRequiredMark name="profile" onFinish={onFinish}>
             <Row gutter={16}>
               <Col span={24}>
@@ -88,7 +90,7 @@ const EditProfile: FC<IEditProfile> = ({isOpen, onClose, me}) => {
                   showUploadList={false}
                   onChange={handleFileChange}
                   beforeUpload={() => false}
-                  disabled={loading}
+                  disabled={fileUploading}
                 >
                   {!!preview ? (
                     <img src={preview} alt="avatar" className="img-preview" />
@@ -178,13 +180,14 @@ const EditProfile: FC<IEditProfile> = ({isOpen, onClose, me}) => {
               </Col>
 
               <Col span={24} style={{textAlign: "right"}}>
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" htmlType="submit" disabled={disabled}>
                   Save
                 </Button>
               </Col>
             </Row>
           </Form>
         )}
+
       </Modal>
     </>
   );
