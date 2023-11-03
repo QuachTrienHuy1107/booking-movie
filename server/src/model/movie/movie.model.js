@@ -33,7 +33,6 @@ const MovieSchema = new Schema(
 
         released: {
             type: Date,
-            required: true,
         },
         rating: {
             type: Number,
@@ -53,6 +52,7 @@ const MovieSchema = new Schema(
                 type: String,
             },
         ],
+        type: String,
         movieRecommend: [
             {
                 type: Schema.Types.ObjectId,

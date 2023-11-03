@@ -10,6 +10,7 @@ import {
 const initialState: ReviewState = {
     reviews: { reviewList: [], total: 0 },
     isLoading: false,
+    isLoadMore: true,
 };
 
 const reviewSlice = createSlice({
@@ -30,6 +31,7 @@ const reviewSlice = createSlice({
                 total: action.payload.total,
                 reviewList: [...newReviews.reviewList, ...action.payload.reviewList],
             };
+
             state.isLoading = false;
             state.error = null;
             state.reviews = newReviews;
@@ -37,6 +39,7 @@ const reviewSlice = createSlice({
         getReviewByMovieFailure: (state, action: PayloadAction<Error>) => {
             state.error = action.payload;
             state.isLoading = false;
+            state.isLoadMore = false;
         },
 
         addNewReview: (state, action: PayloadAction<AdditionalReviewPayload>) => {
@@ -52,6 +55,29 @@ const reviewSlice = createSlice({
             state.error = action.payload;
             state.isLoading = false;
         },
+
+        likeReview: (state, action: PayloadAction<string>) => {
+            state.error = null;
+            state.likeLoading = true;
+        },
+        likeReviewSuccess: (state, action: PayloadAction<ReviewRepsonse>) => {
+            let newReviews: ReviewPaginationResponse = JSON.parse(JSON.stringify(state.reviews));
+            const index = newReviews.reviewList.findIndex((item: ReviewRepsonse) => item._id === action.payload._id);
+            if (index !== -1) {
+                newReviews.reviewList[index].likes = action.payload.likes;
+            }
+            state.reviews = newReviews;
+            state.likeLoading = false;
+        },
+        likeReviewFailure: (state, action: PayloadAction<Error>) => {
+            state.error = action.payload;
+            state.isLoading = false;
+            state.likeLoading = false;
+        },
+
+        resetReviews() {
+            return initialState;
+        },
     },
 });
 
@@ -64,6 +90,10 @@ export const {
     addNewReview,
     addNewReviewSuccess,
     addNewReviewFailure,
+    likeReview,
+    likeReviewSuccess,
+    likeReviewFailure,
+    resetReviews,
 } = actions;
 
 export default reducer;

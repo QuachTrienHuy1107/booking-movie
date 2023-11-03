@@ -17,10 +17,16 @@ const FormTemplate: React.FC<IForm> = ({ children }) => {
 
     React.useEffect(() => {
         const _title = window.location.pathname;
-        if (_title === ROUTES.LOGIN) {
-            setTitle("Login");
-        } else {
-            setTitle("Register");
+        switch (_title) {
+            case ROUTES.LOGIN:
+                setTitle("Login");
+                break;
+            case ROUTES.REGISTER:
+                setTitle("Register");
+                break;
+            default:
+                setTitle("RESET PASSWORD");
+                break;
         }
     }, []);
 

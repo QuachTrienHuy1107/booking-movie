@@ -4,8 +4,8 @@ import { ShowtimeResponse } from "./movie.type";
 
 export interface ICredential {
     readonly _id?: string;
-    email: string;
-    username: string;
+    email?: string;
+    username?: string;
     avatar?: string;
     role?: string;
     phone?: string;
@@ -15,14 +15,17 @@ export interface ICredential {
 }
 
 export interface LoginResponse {
-    user?: ICredential;
-    accessToken?: string;
-    refreshToken?: string;
+    user: ICredential;
 }
 
 export interface LoginPayload {
     email: string;
     password: string;
+}
+
+export interface ResetPasswordPayload {
+    newPassword: string;
+    confirmPassword: string;
 }
 
 export interface RegisterPayload {
@@ -33,7 +36,7 @@ export interface RegisterPayload {
 }
 
 export interface AuthState {
-    credential: LoginResponse;
+    credential: ICredential;
     isLoading: boolean;
     error?: Error | null | string;
     isAuth?: boolean;

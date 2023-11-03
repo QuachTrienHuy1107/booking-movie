@@ -123,7 +123,12 @@ const Register: React.FC = () => {
 
                 <Col span={24}>
                     <Form.Item {...formItemLayout} style={{ textAlign: "center" }}>
-                        <Button type="primary" htmlType="submit" className="register__btn register__btn--registerLocal">
+                        <Button
+                            loading={isLoading}
+                            type="primary"
+                            htmlType="submit"
+                            className="register__btn register__btn--registerLocal"
+                        >
                             Register
                         </Button>
                     </Form.Item>

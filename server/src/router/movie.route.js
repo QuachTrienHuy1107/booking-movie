@@ -71,7 +71,7 @@ movieRoute.post("/booking", verifyToken, booking);
  * @route /api/movie
  * @access Private
  */
-movieRoute.post("/", verifyToken, authorize(["ADMIN"]), uploadImage("file"), addMovie);
+movieRoute.post("/", verifyToken, authorize(["ADMIN"]), addMovie);
 /**
  * @method PUT
  * @route /api/movie/:id

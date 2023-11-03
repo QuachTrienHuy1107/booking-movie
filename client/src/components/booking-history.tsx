@@ -1,6 +1,6 @@
 import { Table } from "antd";
 import moment from "moment";
-import React from "react";
+import React, { memo } from "react";
 import { CinemaResponse } from "types/cinema.type";
 import { MovieResponse, ShowtimeResponse, TicketType } from "types/movie.type";
 
@@ -8,7 +8,7 @@ interface IBookingHistory {
     bookingHistory: ShowtimeResponse[] | undefined;
 }
 
-const BookingHistory: React.FC<IBookingHistory> = ({ bookingHistory }) => {
+const BookingHistory: React.FC<IBookingHistory> = memo(({ bookingHistory }) => {
     const columns = [
         {
             title: "Id",
@@ -20,14 +20,14 @@ const BookingHistory: React.FC<IBookingHistory> = ({ bookingHistory }) => {
             dataIndex: "cinema",
             key: "cinema",
             width: "15%",
-            render: (_cinema: CinemaResponse) => _cinema.cinema_name,
+            render: (_cinema: CinemaResponse) => _cinema?.cinema_name,
         },
         {
             title: "Movie",
             dataIndex: "movie",
             key: "movie",
             width: "20%",
-            render: (_movie: MovieResponse) => _movie.title,
+            render: (_movie: MovieResponse) => _movie?.title,
         },
         {
             title: "Time",
@@ -53,5 +53,5 @@ const BookingHistory: React.FC<IBookingHistory> = ({ bookingHistory }) => {
             <Table dataSource={bookingHistory} columns={columns} pagination={false} />
         </div>
     );
-};
+});
 export default BookingHistory;

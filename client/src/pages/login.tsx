@@ -1,8 +1,10 @@
 import { Button, Checkbox, Col, Form, Input, message, Row, Space } from "antd";
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
+import authSvc from "service/auth.service";
 import { loginAction } from "store/features/auth.slice";
 import { useAppDispatch, useAppSelector } from "store/store";
+import Swal from "sweetalert2";
 import { LoginPayload } from "types/auth.type";
 import { ROUTES } from "utils/constant";
 import { formItemLayout, layout } from "utils/helper";
@@ -14,11 +16,46 @@ const Login: React.FC = () => {
     const [form] = Form.useForm();
     const history = useHistory();
 
+    React.useEffect(() => {
+        if (isAuth && !isFirst.current) {
+            window.close();
+        }
+    }, [isAuth]);
+
     const onFinish = (values: LoginPayload) => {
         isFirst.current = false;
         disptach(loginAction(values));
     };
 
+    const ShowEmailPopup = () => {
+        Swal.fire({
+            title: "Enter your email",
+            input: "email",
+            inputAttributes: {
+                autocapitalize: "off",
+            },
+            showCancelButton: true,
+            confirmButtonText: "Submit",
+            showLoaderOnConfirm: true,
+            preConfirm: async (email: string) => {
+                try {
+                    const { response, error }: any = await authSvc.sendEmailToResetPassword({ email });
+                    if (!!error) throw new Error("INTERNAL SERVER");
+                    return response.data.message;
+                } catch (error) {
+                    Swal.showValidationMessage(`Request failed: ${error}`);
+                }
+            },
+
+            allowOutsideClick: () => !Swal.isLoading(),
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: result.value,
+                });
+            }
+        });
+    };
 
     const handleLoginWithSocial = async () => {
         let timer: NodeJS.Timeout | null = null;
@@ -28,7 +65,6 @@ const Login: React.FC = () => {
         if (newWindow) {
             timer = setInterval(() => {
                 if (newWindow.closed) {
-                    console.log("Yay we're authenticated");
                     if (timer) clearInterval(timer);
                     // history.push(ROUTES.HOME);
                 }
@@ -46,10 +82,10 @@ const Login: React.FC = () => {
     }, [history, isAuth]);
 
     React.useEffect(() => {
-        if (Object.keys(credential).length !== 0) {
+        if (!!credential && Object.keys(credential).length !== 0) {
             return form.setFieldsValue({
-                email: credential.user?.email,
-                password: credential.user?.password,
+                email: credential?.email,
+                password: credential?.password,
             });
         }
         form.resetFields();
@@ -107,7 +143,7 @@ const Login: React.FC = () => {
                             <Checkbox>Remember me</Checkbox>
                         </Form.Item>
 
-                        <a className="login-form-forgot" href="">
+                        <a onClick={ShowEmailPopup} className="login-form-forgot">
                             Forgot password
                         </a>
                     </Form.Item>
@@ -126,7 +162,7 @@ const Login: React.FC = () => {
                     </Form.Item>
                 </Col>
 
-                <Col span={24} style={{ textAlign: "center" }} className="login--social">
+                {/* <Col span={24} style={{ textAlign: "center" }} className="login--social">
                     <Space size="large">
                         <Button
                             shape="circle"
@@ -140,7 +176,7 @@ const Login: React.FC = () => {
                             onClick={() => handleLoginWithSocial()}
                         />
                     </Space>
-                </Col>
+                </Col> */}
 
                 <Col span={24}>
                     <Form.Item style={{ textAlign: "center" }}>

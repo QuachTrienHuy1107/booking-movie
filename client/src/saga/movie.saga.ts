@@ -23,7 +23,7 @@ import { BookingPayload, MovieFilterPayload, PaginationRequestType } from "../ty
 function* onGetDataPagination({ payload }: PayloadAction<PaginationRequestType>) {
     try {
         const { response, error } = yield call(movieApi.getMoviePagination, payload);
-        yield delay(500);
+
         if (error) throw new Error(error.message);
 
         yield put(getPaginateMoviesActionSucess(response.data));
@@ -36,7 +36,6 @@ function* onGetDataPagination({ payload }: PayloadAction<PaginationRequestType>)
 function* onGetMovieDetail({ payload }: PayloadAction<GetDetailPayload>) {
     try {
         const { response, error } = yield call(movieApi.getMovieDetail, payload);
-        yield delay(500);
         if (error) throw new Error(error.message);
 
         yield put(getMovieDetailActionSuccess(response.data));

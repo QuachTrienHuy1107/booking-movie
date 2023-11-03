@@ -7,34 +7,23 @@ import { Container } from "react-bootstrap";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { logoutAction } from "store/features/auth.slice";
-import { persistor, useAppDispatch, useAppSelector } from "store/store";
+import { useAppDispatch, useAppSelector } from "store/store";
 import { ROUTES } from "utils/constant";
 import "../../styles/components/_header.scss";
 import { Loading } from "./loading";
 import Logo from "./logo";
 
-const menu = (
-    <Menu>
-        <Menu.Item key="0">
-            <a href="https://www.antgroup.com">1st menu item</a>
-        </Menu.Item>
-        <Menu.Item key="1">
-            <a href="https://www.aliyun.com">2nd menu item</a>
-        </Menu.Item>
-        <Menu.Divider />
-        <Menu.Item key="3">3rd menu item</Menu.Item>
-    </Menu>
-);
+const menu = <Menu></Menu>;
 
 const Header: React.FC = () => {
-    const { credential } = useAppSelector((state) => state.authSlice);
+    const { credential, isLoading } = useAppSelector((state) => state.authSlice);
     const dispatch = useAppDispatch();
     const history = useHistory();
     const { onSearch, options, loading } = useSearch();
     const [value, setValue] = React.useState<any>(undefined);
 
     const handleLogout = () => {
-        persistor.purge();
+        // persistor.purge();
         dispatch(logoutAction());
         localStorage.clear();
     };
@@ -67,17 +56,12 @@ const Header: React.FC = () => {
                         <div className="header__right__userInfo">
                             {Object.keys(credential).length === 0 ? (
                                 <Link to={ROUTES.LOGIN}>
-                                    {/* <img
-                                        src={credential.user?.avatar}
-                                        alt="avatar"
-                                        className="header__right__userInfo--avatar"
-                                    /> */}
                                     <p className="header__right__userInfo--name">Login</p>
                                 </Link>
                             ) : (
                                 <>
                                     <img
-                                        src={credential.user?.avatar}
+                                        src={credential.avatar}
                                         alt="avatar"
                                         className="header__right__userInfo--avatar"
                                     />
@@ -86,9 +70,7 @@ const Header: React.FC = () => {
                                             <Menu>
                                                 <Menu.Item
                                                     key="0"
-                                                    onClick={() =>
-                                                        history.push(`${ROUTES.PROFILE}/${credential.user?._id}`)
-                                                    }
+                                                    onClick={() => history.push(`${ROUTES.PROFILE}/${credential?._id}`)}
                                                 >
                                                     Profile
                                                 </Menu.Item>
@@ -100,19 +82,15 @@ const Header: React.FC = () => {
                                         trigger={["click"]}
                                     >
                                         <p className="header__right__userInfo--name" style={{ cursor: "pointer" }}>
-                                            {credential.user?.username}
+                                            {credential?.username}
                                         </p>
                                     </Dropdown>
                                 </>
                             )}
                         </div>
                         <div className="header__right__location">
-                            <i className="fa fa-map-marker-alt"></i>
-                            <Dropdown overlay={menu} trigger={["click"]}>
-                                <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
-                                    VIETNAM <DownOutlined />
-                                </a>
-                            </Dropdown>
+                            <i className="fa fa-map-marker-alt" style={{ marginRight: 10 }}></i>
+                            <span>VIET NAM</span>
                         </div>
                     </div>
                 </div>

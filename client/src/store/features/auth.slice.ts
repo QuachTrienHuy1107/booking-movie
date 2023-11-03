@@ -1,6 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AuthState, LoginPayload, RegisterPayload, LoginResponse, ICredential } from "../../types/auth.type";
-import { persistor } from "store/store";
+import {
+    AuthState,
+    LoginPayload,
+    RegisterPayload,
+    LoginResponse,
+    ICredential,
+    ResetPasswordPayload,
+} from "../../types/auth.type";
+// import { persistor } from "store/store";
 
 const initialState: AuthState = {
     credential: {},
@@ -13,17 +20,33 @@ const authSlice = createSlice({
     name: "authslice",
     initialState,
     reducers: {
+        getMe: (state) => {
+            state.isLoading = true;
+            state.error = null;
+            state.isAuth = false;
+        },
+        getMeSuccess: (state, action: PayloadAction<ICredential>) => {
+            state.credential = action.payload;
+            state.isLoading = false;
+            state.isAuth = true;
+        },
+        getMeFailure: (state: any, action: PayloadAction<string>) => {
+            state.error = action.payload;
+            state.isLoading = false;
+            state.isAuth = false;
+        },
+
         loginAction(state, action: PayloadAction<LoginPayload>) {
             state.isLoading = true;
             state.error = null;
             state.isAuth = false;
         },
-        loginActionSuccess(state, action: PayloadAction<LoginResponse>) {
+        loginActionSuccess(state, action: PayloadAction<ICredential>) {
             state.credential = action.payload;
             state.isLoading = false;
             state.isAuth = true;
         },
-        loginActionFailure(state, action) {
+        loginActionFailure(state: any, action: PayloadAction<string>) {
             state.error = action.payload;
             state.isLoading = false;
             state.isAuth = false;
@@ -35,15 +58,18 @@ const authSlice = createSlice({
         registerAction(state: any, action: PayloadAction<RegisterPayload>) {
             state.isLoading = true;
             state.error = null;
+            state.isAuth = false;
         },
         registerActionSuccess(state: AuthState, action: PayloadAction<ICredential>) {
-            state.credential.user = action.payload;
+            state.credential = action.payload;
             state.isLoading = false;
             state.error = null;
+            state.isAuth = false;
         },
         registerActionFailure(state: any, action: PayloadAction<string>) {
             state.error = action.payload;
             state.isLoading = false;
+            state.isAuth = false;
         },
 
         updateProfile: (state, action: PayloadAction<any>) => {
@@ -54,7 +80,7 @@ const authSlice = createSlice({
         updateProfileSuccess: (state, action: PayloadAction<{ user: ICredential; isSuccess: boolean }>) => {
             state.isLoading = false;
             state.error = null;
-            state.credential.user = action.payload.user;
+            state.credential = action.payload.user;
             state.isSuccess = action.payload.isSuccess;
         },
         updateProfileFailure: (state: any, action: PayloadAction<string>) => {
@@ -62,12 +88,18 @@ const authSlice = createSlice({
             state.isLoading = false;
             state.isSuccess = false;
         },
+        resetPassword: (state: any, action: PayloadAction<ResetPasswordPayload>) => {},
+        resetPasswordSuccess: () => {},
+        resetPasswordFailure: () => {},
     },
 });
 
 const { actions, reducer } = authSlice;
 
 export const {
+    getMe,
+    getMeSuccess,
+    getMeFailure,
     loginAction,
     loginActionFailure,
     loginActionSuccess,
@@ -78,6 +110,9 @@ export const {
     updateProfile,
     updateProfileSuccess,
     updateProfileFailure,
+    resetPassword,
+    resetPasswordSuccess,
+    resetPasswordFailure,
 } = actions;
 
 export default reducer;

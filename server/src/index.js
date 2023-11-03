@@ -10,10 +10,10 @@ const session = require("express-session");
 
 const app = express();
 app.use(
-    cors({
-        origin: "http://localhost:3000",
-        credentials: true,
-    })
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
 );
 app.use(express.json()); // for parsing application/json
 
@@ -22,13 +22,13 @@ app.use("/images", express.static(path.join(__dirname, "\\../public/images")));
 
 //Sessions
 app.use(
-    session({
-        secret: process.env.SESSION_SECRET,
-        resave: false,
-        saveUninitialized: false,
-        cookie: { secure: true },
-        maxAge: 1000 * 60 * 15,
-    })
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: true },
+    maxAge: 1000 * 60 * 15,
+  })
 );
 
 //Passport middlewares
@@ -45,5 +45,5 @@ connectDB();
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-    console.log(`Server is starting at ${PORT}`);
+  console.log(`Server is starting at ${PORT}`);
 });

@@ -58,6 +58,17 @@
                     button {
                         border: none;
                         transform: translateX(toRem(-10));
+                        position: relative;
+
+                        &:focus {
+                            color: $nearly-black;
+                            border-color: $white;
+                        }
+                    }
+
+                    &--like {
+                        color: #40a9ff;
+                        border-color: #40a9ff;
                     }
                 }
 
@@ -74,22 +85,6 @@
         .slick-slide {
             padding-right: toRem(10);
             // width: toRem(222) !important;
-        }
-
-        .slick-list {
-            // overflow: auto !important;
-            padding-bottom: toRem(20);
-            position: relative;
-
-            &::-webkit-scrollbar {
-                width: 2px !important;
-            }
-            &::-webkit-scrollbar-thumb {
-                background-color: #bbb9b9;
-                background-clip: content-box;
-                border-radius: 20px;
-                border: 4px solid transparent;
-            }
         }
     }
 }

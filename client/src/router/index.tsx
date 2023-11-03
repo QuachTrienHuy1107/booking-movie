@@ -24,6 +24,7 @@ const HomePage = lazy(() => import("../pages/home"));
 const MovieDetail = lazy(() => import("../pages/movie-detail"));
 const LoginPage = lazy(() => import("../pages/login"));
 const RegiserPage = lazy(() => import("../pages/register"));
+const ResetPassword = lazy(() => import("../pages/reset-password"));
 const Booking = lazy(() => import("../pages/booking"));
 const Checkout = lazy(() => import("../pages/checkout"));
 const ReviewPage = lazy(() => import("../pages/review-page"));
@@ -95,6 +96,13 @@ const routes = [
         restricted: false,
     },
     {
+        path: `${ROUTES.RESET_PASSWORD}/:token`,
+        exact: true,
+        component: ResetPassword,
+        layout: "Form",
+        restricted: false,
+    },
+    {
         path: ROUTES.REGISTER,
         exact: true,
         component: RegiserPage,
@@ -118,11 +126,16 @@ const AppLayout = ({ component: Component, layout, restricted, ...rest }: Privat
                         <Component {...props} />
                     </FormTemplate>
                 )) ||
-                (Object.keys(credential).length === 0 && restricted === true && <Redirect to={ROUTES.LOGIN} />) ||
+                (!localStorage.getItem("isAuth") && restricted === true && <Redirect to={ROUTES.LOGIN} />) ||
                 (layout === "Home" && (
                     <HomeTemplate {...rest}>
                         <Component {...props} />
                     </HomeTemplate>
+                )) ||
+                (credential?.role === "Admin" && layout === "Admin" && (
+                    <AdminTemplate {...rest}>
+                        <Component {...props} />
+                    </AdminTemplate>
                 )) || <Component {...props} />
             }
         />

@@ -1,6 +1,6 @@
 import newsletter from "assets/images/newslater-bg01.jpg";
 import React from "react";
-import { Container } from "react-bootstrap";
+import {Container} from "react-bootstrap";
 import "../../styles/components/_footer.scss";
 import Logo from "./logo";
 

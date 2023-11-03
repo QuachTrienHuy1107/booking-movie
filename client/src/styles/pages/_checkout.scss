@@ -3,6 +3,8 @@
 .checkout {
     background-color: $nearly-white-blue;
     height: 100%;
+    position: fixed;
+    width: 100%;
     .page-header {
         background-color: $grey;
         margin-bottom: toRem(30);
@@ -38,7 +40,7 @@
             }
 
             &--sold {
-                background: $nearly-white;
+                background: $nearly-white !important;
                 cursor: not-allowed;
                 color: $white !important;
             }
@@ -166,7 +168,8 @@
         height: toRem(50);
         font-size: toRem(20);
 
-        &:hover {
+        &:hover,
+        &:focus {
             background-color: $red;
             color: $white;
         }

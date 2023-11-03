@@ -24,7 +24,9 @@
 
         &__btn {
             &--clear {
-                width: 100%;
+                width: 50%;
+                text-align: center;
+                display: block;
                 color: $nearly-red;
                 border-color: $nearly-red;
             }

@@ -1,4 +1,4 @@
-import { LoginPayload, RegisterPayload } from "types/auth.type";
+import { LoginPayload, RegisterPayload, ResetPasswordPayload } from "types/auth.type";
 import { API } from "utils/constant";
 import axiosClient from "./axiosClient";
 
@@ -28,6 +28,21 @@ const authSvc = {
         const url = API.ME;
         return axiosClient
             .put(url, payload)
+            .then((response) => ({ response }))
+            .catch((error) => ({ error }));
+    },
+
+    sendEmailToResetPassword: (email: { email: string }) => {
+        const url = API.LINK_RESET_PASSWORD;
+        return axiosClient
+            .post(url, email)
+            .then((response) => ({ response }))
+            .catch((error) => ({ error }));
+    },
+    resetPassword: (values: ResetPasswordPayload) => {
+        const url = API.RESET_PASSWORD;
+        return axiosClient
+            .post(url, values)
             .then((response) => ({ response }))
             .catch((error) => ({ error }));
     },

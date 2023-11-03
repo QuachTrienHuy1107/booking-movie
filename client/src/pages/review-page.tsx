@@ -1,27 +1,45 @@
-import { Button, Modal, Slider, Form, Input } from "antd";
+import { Button, Modal, Slider, Form, Input, message } from "antd";
 import HeartIcon from "components/common/heart";
+import { Loading } from "components/common/loading";
 import ReviewList from "components/review-list";
 import usePagination from "hooks/usePagination";
 import React from "react";
 import { Container } from "react-bootstrap";
 import { useLocation, useParams } from "react-router";
-import { addNewReview, getReviewByMovie } from "store/features/review.slice";
+import { addNewReview, getReviewByMovie, resetReviews } from "store/features/review.slice";
 import { useAppDispatch, useAppSelector } from "store/store";
 import { AdditionalReviewPayload, ReviewPayload } from "types/review.type";
+import { ROUTES } from "utils/constant";
 import { formItemLayout } from "utils/helper";
 import "../styles/pages/_review-page.scss";
 
 const ReviewPage: React.FC = () => {
     const { _id } = useParams<any>();
     const dispatch = useAppDispatch();
+    const isFirst = React.useRef(false);
+    const [isModalVisible, setIsModalVisible] = React.useState(false);
+    const [_reviewList, setReviewList] = React.useState<any[] | null>([] || null);
     const { credential } = useAppSelector((state) => state.authSlice);
     const { resPagination, handlePageChange } = usePagination(1, 4);
-    const { reviews, isLoading } = useAppSelector((state) => state.reviewSlice);
-    const [_reviewList, setReviewList] = React.useState<any[] | null>([] || null);
-    const [isModalVisible, setIsModalVisible] = React.useState(false);
+    const { reviews, isLoading, error, likeLoading } = useAppSelector((state) => state.reviewSlice);
     const location = useLocation();
-    console.log("location", location);
-    const isFirst = React.useRef(false);
+
+    React.useEffect(() => {
+        dispatch(resetReviews());
+    }, []);
+
+    React.useEffect(() => {
+        if (!!error && !!isFirst.current && String(error) === "Missing token") {
+            message
+                .error({
+                    content: "You need to login first!",
+                    duration: 0.5,
+                })
+                .then(() => {
+                    window.open(ROUTES.LOGIN, "_blank", "width=500,height=600");
+                });
+        }
+    }, [error]);
 
     React.useEffect(() => {
         if (location.state && !isFirst.current) {
@@ -55,7 +73,7 @@ const ReviewPage: React.FC = () => {
         const data: AdditionalReviewPayload = {
             ...values,
             movieId: _id,
-            userId: credential.user?._id,
+            userId: credential?._id,
         };
         dispatch(addNewReview(data));
         setIsModalVisible(false);
@@ -69,7 +87,8 @@ const ReviewPage: React.FC = () => {
                         <HeartIcon size={40} />
                         <span> 91% </span> Rating
                     </h1>
-                    {/* <p>Ten phim</p> */}
+                    {reviews.reviewList.length === 0 && isLoading && <Loading />}
+                    <p>{reviews.reviewList[0]?.movie?.title}</p>
                 </div>
                 <div className="reviews__rating">
                     <div className="reviews__rating--content">
@@ -86,6 +105,7 @@ const ReviewPage: React.FC = () => {
                     total={reviews.total}
                     isLoading={isLoading}
                     handlePageChange={handlePageChange}
+                    likeLoading={likeLoading}
                 />
 
                 <Modal

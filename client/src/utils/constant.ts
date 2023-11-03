@@ -18,10 +18,12 @@ export enum API {
     BOOKING_MOVIE = "/movie/booking",
 
     /**
-     * Comment
+     * Review
      */
     GET_REVIEW_BY_MOVIE = "/review",
+    GET_REVIEW_BY_USER = "/review",
     ADD_NEW_REVIEW_BY_MOVIE = "/review",
+    LIKE_REVIEW = "/review/like",
 
     /**
      * User
@@ -29,6 +31,8 @@ export enum API {
     REGISTER = "/auth/signup",
     LOGIN = "/auth/login",
     ME = "/auth/me",
+    LINK_RESET_PASSWORD = "/auth/forgot-password",
+    RESET_PASSWORD = "/auth/reset-password",
 }
 
 export enum ROUTES {
@@ -49,6 +53,7 @@ export enum ROUTES {
      */
     LOGIN = "/login",
     REGISTER = "/register",
+    RESET_PASSWORD = "/reset-password",
     /**
      * Admin
      */

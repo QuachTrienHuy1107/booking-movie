@@ -12,10 +12,26 @@ const reviewApi = {
             .catch((error) => ({ error }));
     },
 
+    getReviewByUser: () => {
+        const url = `${API.GET_REVIEW_BY_USER}`;
+        return axiosClient
+            .get(url)
+            .then((response) => ({ response }))
+            .catch((error) => ({ error }));
+    },
+
     addNewReview: (payload: AdditionalReviewPayload) => {
         const url = `${API.ADD_NEW_REVIEW_BY_MOVIE}`;
         return axiosClient
             .post(url, payload)
+            .then((response) => ({ response }))
+            .catch((error) => ({ error }));
+    },
+
+    likeReview: (_id: string) => {
+        const url = `${API.LIKE_REVIEW}/${_id}`;
+        return axiosClient
+            .post(url)
             .then((response) => ({ response }))
             .catch((error) => ({ error }));
     },

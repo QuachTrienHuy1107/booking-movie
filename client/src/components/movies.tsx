@@ -58,8 +58,6 @@ export const Movies: React.FC = () => {
     const { moviePagination, isLoading } = useAppSelector((state) => state.movieSlice);
     const { resPagination } = usePagination(1, 20);
 
-    console.log("moviePagination", moviePagination);
-
     React.useEffect(() => {
         const data = {
             ...resPagination,
@@ -70,8 +68,8 @@ export const Movies: React.FC = () => {
     return (
         <div className="movies">
             <Row>
-                {!!isLoading && <Loading />}
                 <Col>
+                    {!!isLoading && moviePagination.movies.length === 0 && <Loading />}
                     <div style={{ paddingRight: 25 }}>
                         <TitleNavigation title="Now Showing" linkTo={ROUTES.MOVIELIST} subTitle="See all" />
                     </div>

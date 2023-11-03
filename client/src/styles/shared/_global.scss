@@ -41,7 +41,7 @@
     &-next {
         transform: translate(-0, -60px) !important;
         &::before {
-            color: $white;
+            color: $black;
             font-size: toRem(30);
         }
     }
@@ -54,7 +54,7 @@
 }
 
 .pending {
-    opacity: 0.4;
+    opacity: 0.5;
 }
 
 .img-preview {

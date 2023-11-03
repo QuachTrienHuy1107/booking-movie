@@ -1,10 +1,10 @@
 import { DislikeOutlined, LikeOutlined } from "@ant-design/icons";
-import { Button, Empty, Space } from "antd";
+import { Button, Empty, message, Space } from "antd";
 import usePagination from "hooks/usePagination";
 import moment from "moment";
 import React, { memo } from "react";
 import Slider from "react-slick";
-import { getReviewByMovie } from "store/features/review.slice";
+import { resetReviews, getReviewByMovie, likeReview } from "store/features/review.slice";
 import { useAppDispatch, useAppSelector } from "store/store";
 import { ReviewRepsonse } from "types/review.type";
 import { ROUTES } from "utils/constant";
@@ -22,37 +22,66 @@ const settings = {
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
-    // variableWidth: true,
 };
 
 interface ITopReview {
     _id?: string;
 }
 
+let userId = "" as any;
+
 const TopReview: React.FC<ITopReview> = memo(({ _id }) => {
     const dispatch = useAppDispatch();
-
+    const { credential } = useAppSelector((state) => state.authSlice);
     const { resPagination } = usePagination(1, 5);
-    const { reviews, isLoading } = useAppSelector((state) => state.reviewSlice);
+    const { reviews, isLoading, error, likeLoading } = useAppSelector((state) => state.reviewSlice);
+    const isFirst = React.useRef(false);
+
+    React.useEffect(() => {
+        userId = credential._id || null;
+    }, [credential._id]);
+
+    React.useEffect(() => {
+        if (!!error && !!isFirst.current && String(error) === "Missing token") {
+            message
+                .error({
+                    content: "You need to login first!",
+                    duration: 0.5,
+                })
+                .then(() => {
+                    window.open(ROUTES.LOGIN, "_blank", "width=500,height=600");
+                });
+        }
+    }, [error]);
 
     React.useEffect(() => {
         const data = {
             ...resPagination,
             _id,
+            isLoadmore: false,
         };
         dispatch(getReviewByMovie(data));
-    }, [dispatch, _id, resPagination]);
+
+        return () => {
+            dispatch(resetReviews());
+        };
+    }, [dispatch, _id]);
+
+    const handleLike = (_id: string) => {
+        dispatch(likeReview(_id));
+        isFirst.current = true;
+    };
 
     return (
         <section className="top-review">
             <div className="top-review__title">
                 <TitleNavigation
                     title="Top reviews"
-                    subTitle="2k8 review"
+                    subTitle={reviews.total === 0 ? "Review now" : `${reviews.total} reviews`}
                     linkTo={`${ROUTES.REVIEW_PAGE}/${_id}`}
                     state={reviews}
                 />
-                <span className="top-review__title--subtitle">Summary of 2.8K reviews.</span>
+                <span className="top-review__title--subtitle">Summary of {reviews.total} reviews.</span>
             </div>
             {!isLoading && reviews.reviewList.length === 0 && (
                 <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No review yet</span>} />
@@ -64,6 +93,7 @@ const TopReview: React.FC<ITopReview> = memo(({ _id }) => {
                     <>
                         <Slider {...settings}>
                             {reviews.reviewList?.map((review: ReviewRepsonse) => {
+                                const isLike = Boolean(review.likes?.findIndex((item: any) => item.userId === userId));
                                 return (
                                     <div className="top-review__reviews__item" key="1">
                                         <div>
@@ -82,13 +112,23 @@ const TopReview: React.FC<ITopReview> = memo(({ _id }) => {
                                         </div>
                                         <div className="top-review__reviews__item__control">
                                             <div className="top-review__reviews__item__control--left">
-                                                <Button icon={<LikeOutlined />} shape="circle" />
+                                                <Button
+                                                    style={{ cursor: !!likeLoading ? "wait" : "pointer" }}
+                                                    disabled={!!likeLoading}
+                                                    className={
+                                                        !isLike ? `top-review__reviews__item__control--left--like` : ""
+                                                    }
+                                                    icon={<LikeOutlined />}
+                                                    shape="circle"
+                                                    onClick={() => handleLike(review._id ? review._id : "")}
+                                                />
 
-                                                <span>123 </span>
-                                                <Button icon={<DislikeOutlined />} shape="circle" />
+                                                <span>{review.likes?.length}</span>
                                             </div>
                                             <div className="top-review__reviews__item__control--right">
-                                                <Timer time={moment(review.createdAt).format("DD-MM")} />
+                                                <Timer
+                                                    time={moment(review.createdAt).startOf("millisecond").fromNow()}
+                                                />
                                             </div>
                                         </div>
                                     </div>

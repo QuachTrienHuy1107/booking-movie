@@ -6,7 +6,6 @@ const IMDBSchema = new Schema(
     {
         content: {
             type: String,
-            required: true,
         },
         movie: {
             type: Schema.Types.ObjectId,

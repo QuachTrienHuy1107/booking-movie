@@ -1,4 +1,5 @@
 import { message } from "antd";
+import * as antdd from "antd";
 import React, { ChangeEvent } from "react";
 
 const getBase64 = (file: Blob, callback: Function) => {
@@ -32,19 +33,34 @@ const validateUploadFile = (file: File) => {
 };
 
 export const useUpload = () => {
-    const [avatar, setAvatar] = React.useState<File>();
+    const [avatar, setAvatar] = React.useState<any>();
     const [preview, setPreview] = React.useState<string | any>("");
     const [loading, setLoading] = React.useState(false);
 
-    const handleFileChange = (_file: any) => {
+    const handleFileChange = async (_file: any) => {
+        setLoading(true);
         if (!_file) return;
         const { file } = _file;
         if (validateUploadFile(file)) {
             getBase64(file, (imgUrl: any) => {
                 setPreview(imgUrl);
             });
-            setAvatar(file);
+
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", "ouhnbejd");
+            formData.append("cloud_name", "dvqlp0e72");
+
+            const res = await fetch(`https://api.cloudinary.com/v1_1/dvqlp0e72/image/upload`, {
+                method: "POST",
+                body: formData,
+            });
+
+            const _avatar = await res.json();
+
+            setAvatar(_avatar.url);
         }
+        setLoading(false);
     };
 
     return { avatar, handleFileChange, preview, loading };

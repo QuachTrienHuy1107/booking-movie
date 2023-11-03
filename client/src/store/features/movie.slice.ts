@@ -46,7 +46,6 @@ const movieSlice = createSlice({
             state.error = null;
         },
         getFilterMovieFailure: (state, action: PayloadAction<Error>) => {
-            console.log("error", action.payload);
             state.isLoading = false;
             state.error = action.payload;
         },
