@@ -1,20 +1,13 @@
 import {Tabs} from "antd";
-import usePagination from "hooks/usePagination";
-import React from "react";
-import {Col, Row} from "react-bootstrap";
+import {FC} from "react";
 import Slider, {Settings} from "react-slick";
-import {getPaginateMoviesAction} from "store/features/movie.slice";
-import {useAppDispatch, useAppSelector} from "store/store";
-import {MovieResponse} from "types/movie.type";
-import {ROUTES} from "utils/constant";
+import {MoviePaginationResponse, MovieResponse} from "types/movie.type";
 import "../styles/components/_movies.scss";
-import {Loading} from "./common/loading";
-import TitleNavigation from "./common/title-navigation";
 import {MovieCard} from "./movie-card";
 
 const {TabPane} = Tabs;
 
-const settings: Settings = {
+let settings: Settings = {
   arrows: false,
   centerMode: true,
   infinite: true,
@@ -53,36 +46,21 @@ const settings: Settings = {
   ],
 };
 
-export const Movies: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const {moviePagination, isLoading} = useAppSelector((state) => state.movieSlice);
-  const {resPagination} = usePagination(1, 20);
+interface IMovie {
+  moviePagination: MoviePaginationResponse;
+}
 
-  React.useEffect(() => {
-    const data = {
-      ...resPagination,
-    };
-    dispatch(getPaginateMoviesAction(data));
-  }, [dispatch, resPagination]);
+export const Movies: FC = ({moviePagination}: IMovie) => {
 
   return (
     <div className="movies">
-      <Row>
-        <Col>
-          {!!isLoading && moviePagination.movies.length === 0 && <Loading />}
-          <div style={{paddingRight: 25}}>
-            <TitleNavigation title="Now Showing" linkTo={ROUTES.MOVIELIST} subTitle="See all" />
+      <Slider {...settings}>
+        {moviePagination.movies?.map((movie: MovieResponse) => (
+          <div key={movie._id} className="movies__item">
+            <MovieCard movie={movie} />
           </div>
-
-          <Slider {...settings}>
-            {moviePagination.movies?.map((movie: MovieResponse) => (
-              <div key={movie._id} className="movies__item">
-                <MovieCard movie={movie} />
-              </div>
-            ))}
-          </Slider>
-        </Col>
-      </Row>
+        ))}
+      </Slider>
     </div>
   );
 };
