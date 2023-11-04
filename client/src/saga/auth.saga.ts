@@ -30,12 +30,15 @@ function* onGetMe() {
 
 function* onLogin({ payload }: PayloadAction<LoginPayload>) {
   try {
-    const { response, error } = yield call(authSvc.login, payload);
+    const { email, password, rememberMe } = payload;
+    const { response, error } = yield call(authSvc.login, { email, password });
     if (error) throw new Error(error.message);
 
     yield put(loginActionSuccess(response.data.user));
-    localStorage.setItem("access_token", response.data.accessToken);
-    localStorage.setItem("isLoggedIn", "true");
+    if (rememberMe) {
+      localStorage.setItem("access_token", response.data.accessToken);
+      localStorage.setItem("isLoggedIn", "true");
+    }
   } catch (error: any) {
     console.log("error", error.message);
     yield put(loginActionFailure(error.message));
