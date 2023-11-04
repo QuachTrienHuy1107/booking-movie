@@ -3,8 +3,8 @@ import { GetDetailPayload } from "types/shared/get-detail.type";
 import {
     BookingPayload,
     HomeState,
-    MoviePaginationResponse,
     MovieFilterPayload,
+    MoviePaginationResponse,
     PaginationRequestType,
     ShowtimeResponse,
 } from "../../types/movie.type";
@@ -14,7 +14,7 @@ const initialState: HomeState = {
     moviePagination: { movies: [], total: 0 },
     movieDetail: {},
     showtime: {},
-    isLoading: true,
+    isLoading: false,
     error: null,
 };
 

@@ -2,6 +2,13 @@
 
 .movies {
     // max-width: toRem(1200);
+    padding: toRem(25 0);
+
+    &__skeleton {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
+    }
 
     &__item {
         padding-right: toRem(25);

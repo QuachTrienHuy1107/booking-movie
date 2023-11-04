@@ -52,12 +52,16 @@
         }
     }
 
+    &__info {
+        padding: toRem(16) 0;
+    }
+
     .ant-card {
         margin-bottom: toRem(40);
     }
 
     .ant-card-body {
-        padding: toRem(16) 0;
+        padding: 0;
     }
 
     .ant-card-bordered {
