@@ -35,7 +35,7 @@ function* onLogin({ payload }: PayloadAction<LoginPayload>) {
 
         yield put(loginActionSuccess(response.data.user));
         localStorage.setItem("access_token", response.data.accessToken);
-        localStorage.setItem("isAuth", "true");
+        localStorage.setItem("isLoggedIn", "true");
     } catch (error: any) {
         console.log("error", error.message);
         yield put(loginActionFailure(error.message));

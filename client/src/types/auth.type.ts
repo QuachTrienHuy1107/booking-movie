@@ -39,6 +39,6 @@ export interface AuthState {
     credential: ICredential;
     isLoading: boolean;
     error?: Error | null | string;
-    isAuth?: boolean;
+    isLoggedIn?: boolean;
     isSuccess?: boolean;
 }
