@@ -1,11 +1,11 @@
-import {Tabs} from "antd";
-import {FC} from "react";
-import Slider, {Settings} from "react-slick";
-import {MoviePaginationResponse, MovieResponse} from "types/movie.type";
+import { Tabs } from "antd";
+import { FC } from "react";
+import Slider, { Settings } from "react-slick";
+import { MoviePaginationResponse, MovieResponse } from "types/movie.type";
 import "../styles/components/_movies.scss";
-import {MovieCard} from "./movie-card";
+import { MovieCard } from "./movie-card";
 
-const {TabPane} = Tabs;
+const { TabPane } = Tabs;
 
 let settings: Settings = {
   arrows: false,
@@ -50,8 +50,7 @@ interface IMovie {
   moviePagination: MoviePaginationResponse;
 }
 
-export const Movies: FC = ({moviePagination}: IMovie) => {
-
+export const Movies: FC = ({ moviePagination }: IMovie) => {
   return (
     <div className="movies">
       <Slider {...settings}>

@@ -1,5 +1,5 @@
-import {Skeleton} from "antd";
-import '../../styles/components/_header.scss';
+import { Skeleton } from "antd";
+import "../../styles/components/_header.scss";
 
 export default function HeaderSkeleton() {
   return (

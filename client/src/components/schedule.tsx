@@ -1,18 +1,18 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import {Button, Space, Tabs} from "antd";
-import {useGetDate} from "hooks/useGetDate";
-import {useBookingTicketWithDate} from "hooks/useGetRangeDate";
+import { Button, Space, Tabs } from "antd";
+import { useGetDate } from "hooks/useGetDate";
+import { useBookingTicketWithDate } from "hooks/useGetRangeDate";
 import moment from "moment";
 import React from "react";
-import {Col, Row} from "react-bootstrap";
-import {useHistory} from "react-router";
-import {CinemaResponse} from "types/cinema.type";
-import {ShowtimeResponse} from "types/movie.type";
-import {ROUTES} from "utils/constant";
+import { Col, Row } from "react-bootstrap";
+import { useHistory } from "react-router";
+import { CinemaResponse } from "types/cinema.type";
+import { ShowtimeResponse } from "types/movie.type";
+import { ROUTES } from "utils/constant";
 import "../styles/components/_schedule.scss";
 import ModalCustom from "./shared/modal";
 
-const {TabPane} = Tabs;
+const { TabPane } = Tabs;
 
 const tabExtra = (
   <div className="schedule__info">
@@ -31,10 +31,10 @@ interface ISchedule {
   cinema: CinemaResponse[] | [];
 }
 
-const Schedule: React.FC<ISchedule> = ({cinema}): any => {
+const Schedule: React.FC<ISchedule> = ({ cinema }): any => {
   const history = useHistory();
-  const {today, dateTomorrow} = useGetDate();
-  const {arrayDate} = useBookingTicketWithDate("07-10-2021", "10-10-2021");
+  const { today, dateTomorrow } = useGetDate();
+  const { arrayDate } = useBookingTicketWithDate("07-10-2021", "10-10-2021");
 
   return (
     <div className="schedule">
@@ -63,8 +63,8 @@ const Schedule: React.FC<ISchedule> = ({cinema}): any => {
                   const formatDate = moment(date).format("DD-MM-YYYY");
                   const reFormatDate = formatDate.split("-");
                   const filterDateTime = `${reFormatDate[2]}-${reFormatDate[1]}-${reFormatDate[0]}`;
-                  const listCinemaAvailable = item.showtimes.filter((timePlay: ShowtimeResponse) =>
-                    timePlay.time?.includes(filterDateTime)
+                  const listCinemaAvailable = item.showtimes.filter(
+                    (timePlay: ShowtimeResponse) => timePlay.time?.includes(filterDateTime),
                   );
                   return (
                     listCinemaAvailable.length !== 0 && (
@@ -90,13 +90,10 @@ const Schedule: React.FC<ISchedule> = ({cinema}): any => {
                                   .includes("ago");
                                 return (
                                   <Button
-
                                     key={showtime._id}
                                     className="schedule__detail__time"
                                     onClick={() =>
-                                      history.push(
-                                        `${ROUTES.CHECKOUT}/${showtime._id}`
-                                      )
+                                      history.push(`${ROUTES.CHECKOUT}/${showtime._id}`)
                                     }
                                   >
                                     {moment(showtime.time).format("hh:MM A")}

@@ -1,20 +1,20 @@
-import {BackTop} from "antd";
+import { BackTop } from "antd";
 import LoginSuccess from "components/login-success";
-import {useScreenType} from "hooks/useScreenType";
+import { useScreenType } from "hooks/useScreenType";
 import React from "react";
-import {Redirect, Route, Switch} from "react-router-dom";
-import {getMe} from "store/features/auth.slice";
-import {useAppDispatch, useAppSelector} from "store/store";
-import {Loading} from "./components/common/loading";
+import { Redirect, Route, Switch } from "react-router-dom";
+import { getMe } from "store/features/auth.slice";
+import { useAppDispatch, useAppSelector } from "store/store";
+import { Loading } from "./components/common/loading";
 import NotFoundPage from "./pages/notfound";
-import {renderRoutes, routes} from "./router";
+import { renderRoutes, routes } from "./router";
 import "./styles/pages/App.scss";
-import {ROUTES} from "./utils/constant";
+import { ROUTES } from "./utils/constant";
 
 function App() {
-  const {Mobile, FullScreen} = useScreenType();
+  const { Mobile, FullScreen } = useScreenType();
   const dispatch = useAppDispatch();
-  const {credential} = useAppSelector((state) => state.authSlice);
+  const { credential } = useAppSelector(state => state.authSlice);
 
   React.useEffect(() => {
     function checkUser() {

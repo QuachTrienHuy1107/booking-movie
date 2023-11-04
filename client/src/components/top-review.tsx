@@ -1,16 +1,16 @@
-import {LikeOutlined} from "@ant-design/icons";
-import {Button, Empty, Space, message} from "antd";
+import { LikeOutlined } from "@ant-design/icons";
+import { Button, Empty, Space, message } from "antd";
 import usePagination from "hooks/usePagination";
 import moment from "moment";
-import React, {memo} from "react";
-import Slider, {Settings} from "react-slick";
-import {getReviewByMovie, likeReview, resetReviews} from "store/features/review.slice";
-import {useAppDispatch, useAppSelector} from "store/store";
-import {ReviewRepsonse} from "types/review.type";
-import {ROUTES} from "utils/constant";
+import React, { memo } from "react";
+import Slider, { Settings } from "react-slick";
+import { getReviewByMovie, likeReview, resetReviews } from "store/features/review.slice";
+import { useAppDispatch, useAppSelector } from "store/store";
+import { ReviewRepsonse } from "types/review.type";
+import { ROUTES } from "utils/constant";
 import "../styles/components/_top-review.scss";
 import UserInfo from "./common/info";
-import {Loading} from "./common/loading";
+import { Loading } from "./common/loading";
 import Rater from "./common/rating";
 import Timer from "./common/timer";
 import TitleNavigation from "./common/title-navigation";
@@ -31,11 +31,11 @@ interface ITopReview {
 
 let userId = "" as any;
 
-const TopReview: React.FC<ITopReview> = memo(({_id}) => {
+const TopReview: React.FC<ITopReview> = memo(({ _id }) => {
   const dispatch = useAppDispatch();
-  const {credential} = useAppSelector((state) => state.authSlice);
-  const {resPagination} = usePagination(1, 5);
-  const {reviews, isLoading, error, likeLoading} = useAppSelector((state) => state.reviewSlice);
+  const { credential } = useAppSelector(state => state.authSlice);
+  const { resPagination } = usePagination(1, 5);
+  const { reviews, isLoading, error, likeLoading } = useAppSelector(state => state.reviewSlice);
   const isFirst = React.useRef(false);
 
   React.useEffect(() => {
@@ -94,7 +94,9 @@ const TopReview: React.FC<ITopReview> = memo(({_id}) => {
           <>
             <Slider {...settings}>
               {reviews.reviewList?.map((review: ReviewRepsonse) => {
-                const isLike = Boolean(review.likes?.findIndex((item: any) => item.userId === userId));
+                const isLike = Boolean(
+                  review.likes?.findIndex((item: any) => item.userId === userId),
+                );
                 return (
                   <div className="top-review__reviews__item" key="1">
                     <div>
@@ -114,7 +116,7 @@ const TopReview: React.FC<ITopReview> = memo(({_id}) => {
                     <div className="top-review__reviews__item__control">
                       <div className="top-review__reviews__item__control--left">
                         <Button
-                          style={{cursor: !!likeLoading ? "wait" : "pointer"}}
+                          style={{ cursor: !!likeLoading ? "wait" : "pointer" }}
                           disabled={!!likeLoading}
                           className={
                             !isLike ? `top-review__reviews__item__control--left--like` : ""
@@ -127,9 +129,7 @@ const TopReview: React.FC<ITopReview> = memo(({_id}) => {
                         <span>{review.likes?.length}</span>
                       </div>
                       <div className="top-review__reviews__item__control--right">
-                        <Timer
-                          time={moment(review.createdAt).startOf("millisecond").fromNow()}
-                        />
+                        <Timer time={moment(review.createdAt).startOf("millisecond").fromNow()} />
                       </div>
                     </div>
                   </div>

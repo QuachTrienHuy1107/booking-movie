@@ -1,17 +1,17 @@
-import {Button, Checkbox, Col, Form, Input, message, Row} from "antd";
+import { Button, Checkbox, Col, Form, Input, message, Row } from "antd";
 import React from "react";
-import {Link, useHistory} from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import authSvc from "service/auth.service";
-import {loginAction} from "store/features/auth.slice";
-import {useAppDispatch, useAppSelector} from "store/store";
+import { loginAction } from "store/features/auth.slice";
+import { useAppDispatch, useAppSelector } from "store/store";
 import Swal from "sweetalert2";
-import {LoginPayload} from "types/auth.type";
-import {ROUTES} from "utils/constant";
-import {formItemLayout, layout} from "utils/helper";
+import { LoginPayload } from "types/auth.type";
+import { ROUTES } from "utils/constant";
+import { formItemLayout, layout } from "utils/helper";
 
 const Login: React.FC = () => {
   const disptach = useAppDispatch();
-  const {credential, isLoading, error, isLoggedIn} = useAppSelector((state) => state.authSlice);
+  const { credential, isLoading, error, isLoggedIn } = useAppSelector(state => state.authSlice);
   const isFirst = React.useRef(true);
   const [form] = Form.useForm();
   const history = useHistory();
@@ -24,6 +24,8 @@ const Login: React.FC = () => {
 
   const onFinish = (values: LoginPayload) => {
     isFirst.current = false;
+    console.log("values", values);
+
     disptach(loginAction(values));
   };
 
@@ -39,7 +41,7 @@ const Login: React.FC = () => {
       showLoaderOnConfirm: true,
       preConfirm: async (email: string) => {
         try {
-          const {response, error}: any = await authSvc.sendEmailToResetPassword({email});
+          const { response, error }: any = await authSvc.sendEmailToResetPassword({ email });
           if (!!error) throw new Error("INTERNAL SERVER");
           return response.data.message;
         } catch (error) {
@@ -48,7 +50,7 @@ const Login: React.FC = () => {
       },
 
       allowOutsideClick: () => !Swal.isLoading(),
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed) {
         Swal.fire({
           title: result.value,
@@ -139,7 +141,7 @@ const Login: React.FC = () => {
         </Col>
         <Col span={24}>
           <Form.Item className="login__checkbox" {...formItemLayout}>
-            <Form.Item valuePropName="checked" noStyle>
+            <Form.Item valuePropName="checked" name="rememberMe" noStyle>
               <Checkbox>Remember me</Checkbox>
             </Form.Item>
 
@@ -150,7 +152,7 @@ const Login: React.FC = () => {
         </Col>
 
         <Col span={24}>
-          <Form.Item {...formItemLayout} style={{textAlign: "center"}}>
+          <Form.Item {...formItemLayout} style={{ textAlign: "center" }}>
             <Button
               type="primary"
               htmlType="submit"
@@ -179,7 +181,7 @@ const Login: React.FC = () => {
                 </Col> */}
 
         <Col span={24}>
-          <Form.Item style={{textAlign: "center"}}>
+          <Form.Item style={{ textAlign: "center" }}>
             <span>Don't you have an account? </span>
             <Link to={ROUTES.REGISTER}>Register now</Link>
           </Form.Item>

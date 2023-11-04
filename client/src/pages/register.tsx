@@ -1,16 +1,16 @@
-import {Button, Col, Form, Input, message, Row} from "antd";
+import { Button, Col, Form, Input, message, Row } from "antd";
 import React from "react";
-import {Link, useHistory} from "react-router-dom";
-import {registerAction} from "store/features/auth.slice";
-import {useAppDispatch, useAppSelector} from "store/store";
-import {RegisterPayload} from "types/auth.type";
-import {ROUTES} from "utils/constant";
-import {formItemLayout, layout} from "utils/helper";
+import { Link, useHistory } from "react-router-dom";
+import { registerAction } from "store/features/auth.slice";
+import { useAppDispatch, useAppSelector } from "store/store";
+import { RegisterPayload } from "types/auth.type";
+import { ROUTES } from "utils/constant";
+import { formItemLayout, layout } from "utils/helper";
 
 const Register: React.FC = () => {
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
-  const {credential, isLoading, error, isLoggedIn} = useAppSelector((state) => state.authSlice);
+  const { credential, isLoading, error, isLoggedIn } = useAppSelector(state => state.authSlice);
   const history = useHistory();
   const isFirst = React.useRef(true);
 
@@ -105,13 +105,13 @@ const Register: React.FC = () => {
                 required: true,
                 message: "Please confirm your password!",
               },
-              ({getFieldValue}) => ({
+              ({ getFieldValue }) => ({
                 validator(_, value) {
                   if (!value || getFieldValue("password") === value) {
                     return Promise.resolve();
                   }
                   return Promise.reject(
-                    new Error("The two passwords that you entered do not match!")
+                    new Error("The two passwords that you entered do not match!"),
                   );
                 },
               }),
@@ -122,7 +122,7 @@ const Register: React.FC = () => {
         </Col>
 
         <Col span={24}>
-          <Form.Item {...formItemLayout} style={{textAlign: "center"}}>
+          <Form.Item {...formItemLayout} style={{ textAlign: "center" }}>
             <Button
               loading={isLoading}
               type="primary"
@@ -135,7 +135,7 @@ const Register: React.FC = () => {
         </Col>
 
         <Col span={24}>
-          <Form.Item style={{textAlign: "center"}}>
+          <Form.Item style={{ textAlign: "center" }}>
             <span>Have an account? </span>
             <Link to={ROUTES.LOGIN}>Login now</Link>
           </Form.Item>

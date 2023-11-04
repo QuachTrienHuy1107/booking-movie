@@ -1,3 +1,3 @@
 export interface GetDetailPayload {
-    _id: string;
+  _id: string;
 }

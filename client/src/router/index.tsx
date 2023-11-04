@@ -1,10 +1,10 @@
-import React, {lazy} from "react";
-import {Redirect, Route, RouteProps} from "react-router-dom";
-import {useAppSelector} from "store/store";
+import React, { lazy } from "react";
+import { Redirect, Route, RouteProps } from "react-router-dom";
+import { useAppSelector } from "store/store";
 import AdminTemplate from "../templates/admin.template";
 import FormTemplate from "../templates/form.template";
 import HomeTemplate from "../templates/home.template";
-import {ROUTES} from "../utils/constant";
+import { ROUTES } from "../utils/constant";
 
 type PrivateRouteProps = {
   component: React.ComponentType;
@@ -111,22 +111,24 @@ const routes = [
   },
 ];
 
-const AppLayout = ({component: Component, layout, restricted, ...rest}: PrivateRouteProps) => {
-  const {credential} = useAppSelector((state) => state.authSlice);
+const AppLayout = ({ component: Component, layout, restricted, ...rest }: PrivateRouteProps) => {
+  const { credential } = useAppSelector(state => state.authSlice);
   React.useLayoutEffect(() => {
-    window.scrollTo({top: 0, left: 0, behavior: "smooth"});
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, []);
 
   return (
     <Route
       {...rest}
-      render={(props) =>
+      render={props =>
         (layout === "Form" && (
           <FormTemplate>
             <Component {...props} />
           </FormTemplate>
         )) ||
-        (!localStorage.getItem("isLoggedIn") && restricted === true && <Redirect to={ROUTES.LOGIN} />) ||
+        (!localStorage.getItem("isLoggedIn") && restricted === true && (
+          <Redirect to={ROUTES.LOGIN} />
+        )) ||
         (layout === "Home" && (
           <HomeTemplate {...rest}>
             <Component {...props} />
@@ -157,4 +159,4 @@ const renderRoutes = (router: any) => {
   }
 };
 
-export {renderRoutes, routes};
+export { renderRoutes, routes };

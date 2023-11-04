@@ -10,17 +10,17 @@ import rootReducer, { RootState } from "./root.reducer";
 const sagaMiddleware = createSagaMiddleware();
 
 const persistConfig = {
-    key: "root",
-    storage,
-    whitelist: ["authSlice"],
+  key: "root",
+  storage,
+  whitelist: ["authSlice"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
-    reducer: rootReducer,
-    middleware: [sagaMiddleware],
-    devTools: process.env.NODE_ENV !== "production",
+  reducer: rootReducer,
+  middleware: [sagaMiddleware],
+  devTools: process.env.NODE_ENV !== "production",
 });
 
 sagaMiddleware.run(rootSaga);

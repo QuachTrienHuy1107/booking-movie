@@ -1,6 +1,6 @@
 import newsletter from "assets/images/newslater-bg01.jpg";
 import React from "react";
-import {Container} from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import "../../styles/components/_footer.scss";
 import Logo from "./logo";
 
@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
           <div
             className="newslater-container bg_img"
             data-background="./assets/images/newslater/newslater-bg01.jpg"
-            style={{backgroundImage: `url(${newsletter})`}}
+            style={{ backgroundImage: `url(${newsletter})` }}
           >
             <div className="newslater-wrapper">
               <h5 className="cate">subscribe to Boleto </h5>

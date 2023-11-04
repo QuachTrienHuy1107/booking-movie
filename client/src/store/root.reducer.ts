@@ -6,16 +6,16 @@ import movieSlice from "./features/movie.slice";
 import reviewSlice from "./features/review.slice";
 
 const authPersistConfig = {
-    key: "auth",
-    storage: storage,
-    whitelist: ["credential"],
+  key: "auth",
+  storage: storage,
+  whitelist: ["credential"],
 };
 
 const rootReducer = combineReducers({
-    movieSlice,
-    // authSlice: persistReducer(authPersistConfig, authSlice),
-    authSlice,
-    reviewSlice,
+  movieSlice,
+  // authSlice: persistReducer(authPersistConfig, authSlice),
+  authSlice,
+  reviewSlice,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

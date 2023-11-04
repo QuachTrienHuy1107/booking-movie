@@ -1,25 +1,25 @@
-import {DownOutlined} from '@ant-design/icons';
-import {AutoComplete, Dropdown, Menu, Space} from "antd";
+import { DownOutlined } from "@ant-design/icons";
+import { AutoComplete, Dropdown, Menu, Space } from "antd";
 import useSearch from "hooks/useSearch";
-import {debounce} from "lodash";
+import { debounce } from "lodash";
 import React from "react";
-import {Container} from "react-bootstrap";
-import {useHistory} from "react-router";
-import {Link} from "react-router-dom";
-import {logoutAction} from "store/features/auth.slice";
-import {useAppDispatch, useAppSelector} from "store/store";
-import {ROUTES} from "utils/constant";
+import { Container } from "react-bootstrap";
+import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
+import { logoutAction } from "store/features/auth.slice";
+import { useAppDispatch, useAppSelector } from "store/store";
+import { ROUTES } from "utils/constant";
 import "../../styles/components/_header.scss";
-import {Loading} from "./loading";
+import { Loading } from "./loading";
 import Logo from "./logo";
 
 const menu = <Menu></Menu>;
 
 const Header: React.FC = () => {
-  const {credential, isLoading} = useAppSelector((state) => state.authSlice);
+  const { credential, isLoading } = useAppSelector(state => state.authSlice);
   const dispatch = useAppDispatch();
   const history = useHistory();
-  const {onSearch, options, loading} = useSearch();
+  const { onSearch, options, loading } = useSearch();
   const [value, setValue] = React.useState<any>(undefined);
 
   const handleLogout = () => {
@@ -29,14 +29,14 @@ const Header: React.FC = () => {
   };
 
   const onSelect = (value: string, options: any) => {
-    const {label, key} = options;
+    const { label, key } = options;
     history.push(`${ROUTES.MOVIEDETAIL}/${key}`);
     setValue(value);
   };
 
   return (
     <div className="header">
-      <Container style={{height: "100%"}}>
+      <Container style={{ height: "100%" }}>
         <div className="header__wrapper">
           <div className="header__left">
             <Logo />
@@ -53,7 +53,9 @@ const Header: React.FC = () => {
           </div>
 
           <div className="header__right">
-            {isLoading ? <Loading /> : (
+            {isLoading ? (
+              <Loading />
+            ) : (
               <div className="header__right__userInfo">
                 {Object.keys(credential).length === 0 ? (
                   <Link to={ROUTES.LOGIN}>
@@ -83,7 +85,7 @@ const Header: React.FC = () => {
                       trigger={["click"]}
                     >
                       <Space>
-                        <p className="header__right__userInfo--name" style={{cursor: "pointer"}}>
+                        <p className="header__right__userInfo--name" style={{ cursor: "pointer" }}>
                           {credential?.username}
                         </p>
                         <DownOutlined />
@@ -94,7 +96,6 @@ const Header: React.FC = () => {
               </div>
             )}
           </div>
-
         </div>
       </Container>
     </div>

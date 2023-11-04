@@ -1,10 +1,10 @@
-import {Button, Col, Form, Input, Modal, Row, Upload} from "antd";
-import {useUpload} from "hooks/useUploadFile";
-import {FC, useEffect, useState} from "react";
-import {updateProfile} from "store/features/auth.slice";
-import {useAppDispatch, useAppSelector} from "store/store";
-import {ICredential} from "types/auth.type";
-import {Loading} from "./common/loading";
+import { Button, Col, Form, Input, Modal, Row, Upload } from "antd";
+import { useUpload } from "hooks/useUploadFile";
+import { FC, useEffect, useState } from "react";
+import { updateProfile } from "store/features/auth.slice";
+import { useAppDispatch, useAppSelector } from "store/store";
+import { ICredential } from "types/auth.type";
+import { Loading } from "./common/loading";
 
 interface IEditProfile {
   me: ICredential;
@@ -12,19 +12,19 @@ interface IEditProfile {
   onClose: () => void;
 }
 
-const EditProfile: FC<IEditProfile> = ({isOpen, onClose, me}) => {
+const EditProfile: FC<IEditProfile> = ({ isOpen, onClose, me }) => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const values = Form.useWatch([], form);
-  const {handleFileChange, avatar, preview, loading: fileUploading} = useUpload();
-  const {isLoading} = useAppSelector((state) => state.authSlice);
+  const { handleFileChange, avatar, preview, loading: fileUploading } = useUpload();
+  const { isLoading } = useAppSelector(state => state.authSlice);
   const [isChangePassword, setChangesPassword] = useState(false);
   const [submittable, setSubmittable] = useState(false);
 
   const disabled = isLoading || fileUploading || !submittable;
 
   useEffect(() => {
-    form.validateFields({validateOnly: true}).then(
+    form.validateFields({ validateOnly: true }).then(
       () => {
         setSubmittable(true);
       },
@@ -71,15 +71,23 @@ const EditProfile: FC<IEditProfile> = ({isOpen, onClose, me}) => {
       }
     }
 
-    const data = !!avatar ? {...values, avatar} : values;
+    const data = !!avatar ? { ...values, avatar } : values;
 
     dispatch(updateProfile(data));
   };
 
   return (
     <>
-      <Modal title="Edit profile" visible={isOpen} onCancel={() => handleClose()} footer={null} destroyOnClose={true}>
-        {!!isLoading ? <Loading /> : (
+      <Modal
+        title="Edit profile"
+        visible={isOpen}
+        onCancel={() => handleClose()}
+        footer={null}
+        destroyOnClose={true}
+      >
+        {!!isLoading ? (
+          <Loading />
+        ) : (
           <Form form={form} layout="vertical" hideRequiredMark name="profile" onFinish={onFinish}>
             <Row gutter={16}>
               <Col span={24}>
@@ -107,7 +115,7 @@ const EditProfile: FC<IEditProfile> = ({isOpen, onClose, me}) => {
                       Username <span className="error">*</span>
                     </span>
                   }
-                  rules={[{required: true, message: "Please enter user name"}]}
+                  rules={[{ required: true, message: "Please enter user name" }]}
                 >
                   <Input placeholder="Please enter user name" />
                 </Form.Item>
@@ -120,7 +128,13 @@ const EditProfile: FC<IEditProfile> = ({isOpen, onClose, me}) => {
                       Email <span className="error">*</span>
                     </span>
                   }
-                  rules={[{required: true, message: "Please enter user name", type: "email"}]}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please enter user name",
+                      type: "email",
+                    },
+                  ]}
                 >
                   <Input placeholder="Please enter your email" />
                 </Form.Item>
@@ -134,7 +148,12 @@ const EditProfile: FC<IEditProfile> = ({isOpen, onClose, me}) => {
                 <Form.Item
                   name="oldPassword"
                   label="Old password"
-                  rules={[{required: isChangePassword, message: "Please enter your old password"}]}
+                  rules={[
+                    {
+                      required: isChangePassword,
+                      message: "Please enter your old password",
+                    },
+                  ]}
                 >
                   <Input
                     placeholder="Please enter your old password"
@@ -147,7 +166,12 @@ const EditProfile: FC<IEditProfile> = ({isOpen, onClose, me}) => {
                   name="newPassword"
                   label="New password"
                   hasFeedback
-                  rules={[{required: isChangePassword, message: "Please enter your new password"}]}
+                  rules={[
+                    {
+                      required: isChangePassword,
+                      message: "Please enter your new password",
+                    },
+                  ]}
                 >
                   <Input.Password placeholder="Please enter your new password" />
                 </Form.Item>
@@ -160,13 +184,13 @@ const EditProfile: FC<IEditProfile> = ({isOpen, onClose, me}) => {
                   hasFeedback
                   rules={[
                     // { required: true, message: "Please enter your password" },
-                    ({getFieldValue}) => ({
+                    ({ getFieldValue }) => ({
                       validator(_, value) {
                         if (getFieldValue("newPassword") === value) {
                           return Promise.resolve();
                         }
                         return Promise.reject(
-                          new Error("The two passwords that you entered do not match!")
+                          new Error("The two passwords that you entered do not match!"),
                         );
                       },
                     }),
@@ -179,7 +203,7 @@ const EditProfile: FC<IEditProfile> = ({isOpen, onClose, me}) => {
                 </Form.Item>
               </Col>
 
-              <Col span={24} style={{textAlign: "right"}}>
+              <Col span={24} style={{ textAlign: "right" }}>
                 <Button type="primary" htmlType="submit" disabled={disabled}>
                   Save
                 </Button>
@@ -187,7 +211,6 @@ const EditProfile: FC<IEditProfile> = ({isOpen, onClose, me}) => {
             </Row>
           </Form>
         )}
-
       </Modal>
     </>
   );

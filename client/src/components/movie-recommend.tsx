@@ -1,11 +1,11 @@
 import usePagination from "hooks/usePagination";
 import React from "react";
-import Slider, {Settings} from "react-slick";
-import {getPaginateMoviesAction} from "store/features/movie.slice";
-import {useAppDispatch, useAppSelector} from "store/store";
-import {MovieResponse} from "types/movie.type";
+import Slider, { Settings } from "react-slick";
+import { getPaginateMoviesAction } from "store/features/movie.slice";
+import { useAppDispatch, useAppSelector } from "store/store";
+import { MovieResponse } from "types/movie.type";
 import "../styles/components/_movie-recommend.scss";
-import {MovieCard} from "./movie-card";
+import { MovieCard } from "./movie-card";
 
 const settings: Settings = {
   dots: true,
@@ -13,7 +13,7 @@ const settings: Settings = {
   speed: 500,
   slidesToShow: 5,
   slidesToScroll: 1,
-  touchMove: false
+  touchMove: false,
 };
 
 interface IMovieRec {
@@ -21,10 +21,10 @@ interface IMovieRec {
   movieRec?: MovieResponse[];
 }
 
-const MovieRecommend: React.FC<IMovieRec> = ({movieRec, isHome}) => {
+const MovieRecommend: React.FC<IMovieRec> = ({ movieRec, isHome }) => {
   const dispatch = useAppDispatch();
-  const {isLoading, moviePagination} = useAppSelector((state) => state.movieSlice);
-  const {resPagination} = usePagination(1, 10);
+  const { isLoading, moviePagination } = useAppSelector(state => state.movieSlice);
+  const { resPagination } = usePagination(1, 10);
 
   React.useEffect(() => {
     if (!!movieRec) return;
