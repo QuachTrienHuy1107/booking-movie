@@ -1,9 +1,6 @@
 @import "../main";
 
 .movies {
-  // max-width: toRem(1200);
-  padding: toRem(25 0);
-
   &__skeleton {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -11,7 +8,9 @@
   }
 
   &__item {
-    padding-right: toRem(25);
+    &:not(:last-child) {
+      padding-right: toRem(25);
+    }
   }
 
   @media screen and (max-width: 1290px) {
@@ -26,14 +25,6 @@
     justify-content: center;
   }
 
-  .slick-active {
-    > div {
-      .movies__item:last-child {
-        // padding-right: 0 !important;
-      }
-    }
-  }
-
   .ant-tabs-tab-btn {
     font-size: 1.2rem;
     color: #000;
@@ -42,6 +33,19 @@
   .ant-tabs-tab.ant-tabs-tab-active {
     .ant-tabs-tab-btn {
       color: #fb4226 !important;
+    }
+  }
+
+  .arrow {
+    position: absolute;
+    top: 50%;
+
+    &--left {
+      left: toRem(-10);
+    }
+
+    &--right {
+      right: toRem(-10);
     }
   }
 }

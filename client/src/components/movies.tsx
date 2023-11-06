@@ -1,11 +1,9 @@
-import { Tabs } from "antd";
-import { FC } from "react";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { FC, useRef } from "react";
 import Slider, { Settings } from "react-slick";
 import { MoviePaginationResponse, MovieResponse } from "types/movie.type";
 import "../styles/components/_movies.scss";
 import { MovieCard } from "./movie-card";
-
-const { TabPane } = Tabs;
 
 let settings: Settings = {
   arrows: false,
@@ -51,15 +49,24 @@ interface IMovie {
 }
 
 export const Movies: FC = ({ moviePagination }: IMovie) => {
+  const slider = useRef(null);
+
   return (
     <div className="movies">
-      <Slider {...settings}>
+      <div className="arrow arrow--left">
+        <LeftOutlined onClick={() => slider.current?.slickPrev()} />
+      </div>
+      <Slider {...settings} ref={slider}>
         {moviePagination.movies?.map((movie: MovieResponse) => (
           <div key={movie._id} className="movies__item">
             <MovieCard movie={movie} />
           </div>
         ))}
       </Slider>
+
+      <div className="arrow arrow--right">
+        <RightOutlined onClick={() => slider.current?.slickNext()} />
+      </div>
     </div>
   );
 };
