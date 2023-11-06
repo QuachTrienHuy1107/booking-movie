@@ -7,12 +7,6 @@
     gap: 20px;
   }
 
-  &__item {
-    &:not(:last-child) {
-      padding-right: toRem(25);
-    }
-  }
-
   @media screen and (max-width: 1290px) {
     width: 100%;
   }
@@ -46,6 +40,13 @@
 
     &--right {
       right: toRem(-10);
+    }
+  }
+
+  .slick-slide {
+    > div {
+      display: flex;
+      gap: 20px;
     }
   }
 }
