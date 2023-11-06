@@ -1,4 +1,5 @@
 import { Card } from "antd";
+import moment from "moment";
 import React, { memo } from "react";
 import { Link } from "react-router-dom";
 import { MovieResponse } from "types/movie.type";
@@ -14,7 +15,8 @@ export const MovieCard: React.FC<IMovieCard> = memo(({ movie, isHome }): JSX.Ele
   return (
     <div className={`movie ${isHome ? "movie-recommend" : ""}`} key={movie._id}>
       <Card
-        hoverable
+        hoverable={false}
+        bordered={false}
         cover={
           <div className="movie__poster">
             <Link
@@ -32,7 +34,7 @@ export const MovieCard: React.FC<IMovieCard> = memo(({ movie, isHome }): JSX.Ele
             <h1 className="movie__content movie__content--title">{movie.title}</h1>
           </Link>
           <span className="movie__content movie__content--genres ">
-            {movie.genres?.map((item: string) => item).join(" / ")}
+            {moment(movie.released).format("MMM DD, YYYY")}
           </span>
         </div>
       </Card>
