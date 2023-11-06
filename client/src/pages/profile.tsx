@@ -1,23 +1,23 @@
-import {EditOutlined, UserOutlined} from "@ant-design/icons";
-import {Avatar, Button, Space, Tabs} from "antd";
+import { EditOutlined, UserOutlined } from "@ant-design/icons";
+import { Avatar, Button, Space, Tabs, message } from "antd";
 import BookingHistory from "components/booking-history";
-import {Loading} from "components/common/loading";
+import { Loading } from "components/common/loading";
 import EditProfile from "components/edit-profile";
 import ReviewHistory from "components/review-history";
-import {FC, useEffect, useState} from "react";
-import {Col, Container, Row} from "react-bootstrap";
+import { FC, useEffect, useState } from "react";
+import { Col, Container, Row } from "react-bootstrap";
 import authSvc from "service/auth.service";
-import {useAppSelector} from "store/store";
-import {ICredential} from "types/auth.type";
+import { useAppSelector } from "store/store";
+import { ICredential } from "types/auth.type";
 import "../styles/pages/_profile.scss";
-const {TabPane} = Tabs;
+const { TabPane } = Tabs;
 
 const Profile: FC = () => {
-  const [me, setMe] = useState<ICredential>({email: "", username: ""});
-  const [error, setError] = useState<Error | null>(null);
+  const [me, setMe] = useState<ICredential>({ email: "", username: "" });
+  const [getMeError, setMeError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
   const [isEdit, setEdit] = useState(false);
-  const {credential} = useAppSelector((state) => state.authSlice);
+  const { credential, isSuccess, error } = useAppSelector(state => state.authSlice);
 
   useEffect(() => {
     async function fetchData() {
@@ -26,18 +26,32 @@ const Profile: FC = () => {
         const response: any = await authSvc.me();
 
         const _error = response?.error;
-        const {data} = response?.response;
+        const { data } = response?.response;
         setMe((prev: ICredential) => (prev = data));
 
         if (!!_error) throw new Error(_error.message);
       } catch (error: any) {
-        setError((prev) => (prev = error.message));
+        setMeError(prev => (prev = error.message));
       } finally {
         setLoading(false);
       }
     }
-    fetchData();
-  }, []);
+    if (!!credential) {
+      setMe(credential);
+    } else {
+      fetchData();
+    }
+  }, [credential]);
+
+  useEffect(() => {
+    if (getMeError) return message.error(getMeError);
+    if (error && !isSuccess) return message.error(error);
+    if (isSuccess)
+      message.success({
+        content: "Change profile successfully",
+        duration: 0.5,
+      });
+  }, [isSuccess, error, getMeError]);
 
   const onClose = () => {
     setEdit(false);
@@ -63,7 +77,12 @@ const Profile: FC = () => {
             <Col md={6}>
               <div className="userinfo__operations">
                 <Space>
-                  <Button shape="circle" icon={<EditOutlined />} onClick={() => setEdit(true)} />
+                  <Button
+                    shape="circle"
+                    icon={<EditOutlined />}
+                    disabled={loading}
+                    onClick={() => setEdit(true)}
+                  />
                 </Space>
               </div>
             </Col>

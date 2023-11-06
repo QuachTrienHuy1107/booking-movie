@@ -1,17 +1,17 @@
-import {EyeOutlined} from "@ant-design/icons";
-import {Progress, Space} from "antd";
-import React, {memo} from "react";
-import {Col, Container, Row} from "react-bootstrap";
-import {useHistory} from "react-router";
-import {ROUTES} from "utils/constant";
+import { EyeOutlined } from "@ant-design/icons";
+import { Progress, Space } from "antd";
+import React, { memo } from "react";
+import { Col, Container, Row } from "react-bootstrap";
+import { useHistory } from "react-router";
+import { ROUTES } from "utils/constant";
 import "../styles/components/_poster.scss";
-import {MovieResponse} from "../types/movie.type";
+import { MovieResponse } from "../types/movie.type";
 
 interface IMovieDetail {
   movieDetail: MovieResponse;
 }
 
-const Poster: React.FC<IMovieDetail> = memo(({movieDetail}) => {
+const Poster: React.FC<IMovieDetail> = memo(({ movieDetail }) => {
   const history = useHistory();
 
   return (
@@ -43,9 +43,7 @@ const Poster: React.FC<IMovieDetail> = memo(({movieDetail}) => {
                     <li className="poster__action poster__action--score">
                       <Progress
                         type="circle"
-                        percent={
-                          !!movieDetail.imdb?.rating ? movieDetail.imdb?.rating * 10 : 80
-                        }
+                        percent={!!movieDetail.imdb?.rating ? movieDetail.imdb?.rating * 10 : 80}
                       />
                     </li>
                     <li className="poster__action">

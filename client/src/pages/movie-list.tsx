@@ -1,27 +1,27 @@
-import {Button, Collapse, message, Pagination, Space} from "antd";
-import {LoadingPage} from "components/loading-page";
-import {MovieCard} from "components/movie-card";
+import { Button, Collapse, message, Pagination, Space } from "antd";
+import { LoadingPage } from "components/loading-page";
+import { MovieCard } from "components/movie-card";
 import Title from "components/shared/title";
-import {useGetGenres} from "hooks/useGetGenres";
-import {useGetLanguages} from "hooks/useGetLanguages";
+import { useGetGenres } from "hooks/useGetGenres";
+import { useGetLanguages } from "hooks/useGetLanguages";
 import usePagination from "hooks/usePagination";
 import React from "react";
-import {Col, Container, Row} from "react-bootstrap";
-import {getFilterMovie, getPaginateMoviesAction} from "store/features/movie.slice";
-import {useAppDispatch, useAppSelector} from "store/store";
-import {MovieResponse} from "types/movie.type";
+import { Col, Container, Row } from "react-bootstrap";
+import { getFilterMovie, getPaginateMoviesAction } from "store/features/movie.slice";
+import { useAppDispatch, useAppSelector } from "store/store";
+import { MovieResponse } from "types/movie.type";
 import "../styles/pages/_movie-list.scss";
 
-const {Panel} = Collapse;
+const { Panel } = Collapse;
 
-interface IMovies { }
+interface IMovies {}
 
 const MovieList: React.FC<IMovies> = () => {
   const dispatch = useAppDispatch();
-  const {moviePagination, isLoading, error} = useAppSelector((state) => state.movieSlice);
-  const {languages} = useGetLanguages();
-  const {genres, loading} = useGetGenres();
-  const {resPagination, handlePageChange} = usePagination(1, 12);
+  const { moviePagination, isLoading, error } = useAppSelector(state => state.movieSlice);
+  const { languages } = useGetLanguages();
+  const { genres, loading } = useGetGenres();
+  const { resPagination, handlePageChange } = usePagination(1, 12);
   const [listFilter, setListFilter] = React.useState<string[]>([]);
 
   React.useEffect(() => {
@@ -34,12 +34,12 @@ const MovieList: React.FC<IMovies> = () => {
   React.useEffect(() => {
     const data = [...listFilter].toString().replaceAll(",", "|");
 
-    listFilter.length !== 0 && dispatch(getFilterMovie({filter: data}));
+    listFilter.length !== 0 && dispatch(getFilterMovie({ filter: data }));
   }, [dispatch, listFilter]);
 
   const handleChange = (page: number) => {
     handlePageChange(page);
-    window.scrollTo({top: 0, behavior: "smooth"});
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleReset = () => {

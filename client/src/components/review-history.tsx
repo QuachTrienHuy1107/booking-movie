@@ -1,8 +1,8 @@
-import {Table} from "antd";
+import { Table } from "antd";
 import moment from "moment";
-import React, {memo} from "react";
+import React, { memo } from "react";
 import reviewApi from "service/review.service";
-import {MovieResponse} from "types/movie.type";
+import { MovieResponse } from "types/movie.type";
 
 const ReviewHistory: React.FC = memo(() => {
   const [reviews, setReview] = React.useState<any[]>([]);
@@ -13,7 +13,7 @@ const ReviewHistory: React.FC = memo(() => {
     async function fetchData() {
       try {
         setLoading(true);
-        const {response, error}: any = await reviewApi.getReviewByUser();
+        const { response, error }: any = await reviewApi.getReviewByUser();
         if (!!error) throw new Error("INTERNAL SERVER");
         setReview((_prev: string[]) => [..._prev, ...response.data]);
       } catch (error: any) {
@@ -58,12 +58,10 @@ const ReviewHistory: React.FC = memo(() => {
       dataIndex: "content",
       key: "content",
       width: "40%",
-      render: (text: string) => <span style={{wordBreak: "break-all"}}>{text}</span>,
+      render: (text: string) => <span style={{ wordBreak: "break-all" }}>{text}</span>,
     },
   ];
 
-  return (
-    <Table dataSource={reviews} columns={columns} pagination={false} loading={loading} />
-  );
+  return <Table dataSource={reviews} columns={columns} pagination={false} loading={loading} />;
 });
 export default ReviewHistory;

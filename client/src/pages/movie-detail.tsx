@@ -1,5 +1,4 @@
 import { Tabs } from "antd";
-import { Loading } from "components/common/loading";
 import TitleNavigation from "components/common/title-navigation";
 import { LoadingPage } from "components/loading-page";
 import MovieRecommend from "components/movie-recommend";
@@ -17,31 +16,35 @@ import "../styles/pages/_movie-detail.scss";
 const { TabPane } = Tabs;
 
 const MovieDetail: React.FC = () => {
-    const dispatch = useAppDispatch();
-    const { _id } = useParams() as GetDetailPayload;
-    const { movieDetail, isLoading } = useAppSelector((state) => state.movieSlice);
+  const dispatch = useAppDispatch();
+  const { _id } = useParams() as GetDetailPayload;
+  const { movieDetail, isLoading } = useAppSelector(state => state.movieSlice);
 
-    React.useEffect(() => {
-        dispatch(getMovieDetailAction({ _id }));
-    }, [_id, dispatch]);
+  React.useEffect(() => {
+    dispatch(getMovieDetailAction({ _id }));
+  }, [_id, dispatch]);
 
-    return (
+  return (
+    <>
+      {(!!isLoading && <LoadingPage />) || (
         <>
-            {(!!isLoading && <LoadingPage />) || (
-                <>
-                    <Poster movieDetail={movieDetail} />
-                    <Container>
-                        <TopReview _id={_id} />
-                        <div className="spacing"></div>
-                        <div style={{ paddingRight: 10 }}>
-                            <TitleNavigation title="Movie Recommend" subTitle="See all" linkTo={ROUTES.MOVIELIST} />
-                        </div>
+          <Poster movieDetail={movieDetail} />
+          <Container>
+            <TopReview _id={_id} />
+            <div className="spacing"></div>
+            <div style={{ paddingRight: 10 }}>
+              <TitleNavigation
+                title="Movie Recommend"
+                subTitle="See all"
+                linkTo={ROUTES.MOVIELIST}
+              />
+            </div>
 
-                        <MovieRecommend movieRec={movieDetail.movieRecommend} />
-                    </Container>
-                </>
-            )}
+            <MovieRecommend movieRec={movieDetail.movieRecommend} />
+          </Container>
         </>
-    );
+      )}
+    </>
+  );
 };
 export default MovieDetail;
