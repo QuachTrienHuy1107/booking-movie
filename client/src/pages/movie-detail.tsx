@@ -1,12 +1,13 @@
 import { Tabs } from "antd";
 import TitleNavigation from "components/common/title-navigation";
 import { LoadingPage } from "components/loading-page";
-import MovieRecommend from "components/movie-recommend";
+import { Movies } from "components/movies";
 import Poster from "components/poster";
 import TopReview from "components/top-review";
-import React from "react";
+import { FC, useEffect } from "react";
 import { Container } from "react-bootstrap";
 import { useParams } from "react-router";
+import { Settings } from "react-slick";
 import { getMovieDetailAction } from "store/features/movie.slice";
 import { useAppDispatch, useAppSelector } from "store/store";
 import { GetDetailPayload } from "types/shared/get-detail.type";
@@ -15,17 +16,34 @@ import "../styles/pages/_movie-detail.scss";
 
 const { TabPane } = Tabs;
 
-const MovieDetail: React.FC = () => {
+const settings: Settings = {
+  arrows: false,
+  dots: true,
+  infinite: false,
+  centerPadding: "30",
+
+  speed: 500,
+  slidesToShow: 5,
+  slidesToScroll: 1,
+  touchMove: false,
+};
+
+const MovieDetail: FC = () => {
   const dispatch = useAppDispatch();
   const { _id } = useParams() as GetDetailPayload;
-  const { movieDetail, isLoading } = useAppSelector(state => state.movieSlice);
+  const { movieDetail, isLoading, moviePagination } = useAppSelector(state => state.movieSlice);
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(getMovieDetailAction({ _id }));
   }, [_id, dispatch]);
 
+  const movies = moviePagination && {
+    ...moviePagination,
+    movies: moviePagination.movies.filter(movie => movie._id !== _id),
+  };
+
   return (
-    <>
+    <div className="movie-detail">
       {(!!isLoading && <LoadingPage />) || (
         <>
           <Poster movieDetail={movieDetail} />
@@ -40,11 +58,11 @@ const MovieDetail: React.FC = () => {
               />
             </div>
 
-            <MovieRecommend movieRec={movieDetail.movieRecommend} />
+            <Movies moviePagination={movies} settings={settings} />
           </Container>
         </>
       )}
-    </>
+    </div>
   );
 };
 export default MovieDetail;

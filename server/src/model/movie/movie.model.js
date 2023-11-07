@@ -50,6 +50,9 @@ const MovieSchema = new Schema(
     poster: {
       type: String,
     },
+    backdropPath: {
+      type: String,
+    },
     imdb: {
       type: IMDBSchema,
     },

@@ -1,55 +1,30 @@
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
-import { FC, useRef } from "react";
+import usePagination from "hooks/usePagination";
+import { FC, useEffect, useRef } from "react";
 import Slider, { Settings } from "react-slick";
+import { getPaginateMoviesAction } from "store/features/movie.slice";
+import { useAppDispatch } from "store/store";
 import { MoviePaginationResponse, MovieResponse } from "types/movie.type";
 import "../styles/components/_movies.scss";
 import { MovieCard } from "./movie-card";
 
-let settings: Settings = {
-  arrows: false,
-  centerMode: true,
-  infinite: true,
-  centerPadding: "0",
-  slidesToShow: 1,
-  speed: 400,
-  rows: 2,
-  slidesPerRow: 5,
-  touchMove: false,
-  responsive: [
-    {
-      breakpoint: 992,
-      settings: {
-        slidesToShow: 1,
-        slidesPerRow: 3,
-        initialSlide: 3,
-      },
-    },
-    {
-      breakpoint: 756,
-      settings: {
-        slidesToShow: 1,
-        slidesPerRow: 2,
-        initialSlide: 2,
-      },
-    },
-    {
-      breakpoint: 576,
-      settings: {
-        slidesToShow: 2,
-        slidesPerRow: 1,
-        slidesToScroll: 1,
-        rows: 2,
-      },
-    },
-  ],
-};
-
 interface IMovie {
   moviePagination: MoviePaginationResponse;
+  settings: Settings;
 }
 
-export const Movies: FC = ({ moviePagination }: IMovie) => {
+export const Movies: FC = ({ moviePagination, settings }: IMovie) => {
   const slider = useRef(null);
+  const dispatch = useAppDispatch();
+  const { resPagination } = usePagination(1, 10);
+
+  useEffect(() => {
+    if (!!moviePagination && moviePagination.movies.length > 0) return;
+    const data = {
+      ...resPagination,
+    };
+    dispatch(getPaginateMoviesAction(data));
+  }, [dispatch, moviePagination, resPagination]);
 
   return (
     <div className="movies">
@@ -63,7 +38,6 @@ export const Movies: FC = ({ moviePagination }: IMovie) => {
           </div>
         ))}
       </Slider>
-
       <div className="arrow arrow--right">
         <RightOutlined onClick={() => slider.current?.slickNext()} />
       </div>

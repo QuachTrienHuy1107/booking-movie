@@ -1,5 +1,13 @@
 @import "../main";
 
 .movie-detail {
-  // margin: toRem(32) 0px;
+  .arrow {
+    &--right {
+      right: toRem(-10);
+    }
+  }
+
+  .slick-slide {
+    padding-right: 10px;
+  }
 }

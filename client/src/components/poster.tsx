@@ -1,5 +1,3 @@
-import { EyeOutlined } from "@ant-design/icons";
-import { Progress, Space } from "antd";
 import React, { memo } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useHistory } from "react-router";
@@ -14,9 +12,11 @@ interface IMovieDetail {
 const Poster: React.FC<IMovieDetail> = memo(({ movieDetail }) => {
   const history = useHistory();
 
+  console.log("movieDetail", movieDetail);
+
   return (
     <>
-      <div className="poster">
+      <div className="poster" style={{ backgroundImage: `url(${movieDetail?.backdropPath})` }}>
         <div className="poster__wrapper">
           <Container>
             <Row>
@@ -39,7 +39,11 @@ const Poster: React.FC<IMovieDetail> = memo(({ movieDetail }) => {
                     </div>
                   </div>
 
-                  <ul className="poster__item">
+                  {/* *** */}
+                  {/* Improve later */}
+                  {/* *** */}
+
+                  {/* <ul className="poster__item">
                     <li className="poster__action poster__action--score">
                       <Progress
                         type="circle"
@@ -60,30 +64,15 @@ const Poster: React.FC<IMovieDetail> = memo(({ movieDetail }) => {
                       <button className="poster__action__btn poster__action--star">
                         <i className="fa fa-star" />
                       </button>
-                      {/* <Rate
-                                                allowHalf
-                                                style={{ display: "block" }}
-                                                className="poster__action--rating-star"
-                                            /> */}
-                    </li>
-                  </ul>
 
+                    </li>
+                  </ul> */}
                   <div className="poster__item poster__item--overview my-4">
                     <h3 className="poster__text poster__text--heading">Overview</h3>
                     <p className="poster__text poster__text--desc" title={movieDetail.fullplot}>
                       {movieDetail.fullplot}
                     </p>
                   </div>
-
-                  <div className="poster__item poster__item--director">
-                    <h5 className="poster__text poster__text--heading">Director</h5>
-                    <p className="poster__text poster__text--desc">
-                      {movieDetail.directors?.join(" , ")}
-                    </p>
-                  </div>
-
-                  <div className="poster__item poster__item--view"></div>
-
                   <div className="poster__item poster__item--booking">
                     {movieDetail.cinema && movieDetail.cinema?.length > 0 ? (
                       <button
@@ -98,12 +87,12 @@ const Poster: React.FC<IMovieDetail> = memo(({ movieDetail }) => {
                       </button>
                     )}
 
-                    <Space align="center">
+                    {/* <Space align="center">
                       <EyeOutlined className="poster__item__icon" />
                       <span className="poster__text poster__text--desc">
                         {!!movieDetail.imdb && movieDetail.imdb?.votes + 400}
                       </span>
-                    </Space>
+                    </Space> */}
                   </div>
                 </div>
               </Col>

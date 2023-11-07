@@ -1,6 +1,7 @@
 @import "../main";
 
 .movies {
+  position: relative;
   &__skeleton {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -32,21 +33,23 @@
 
   .arrow {
     position: absolute;
-    top: 50%;
+    top: 45%;
 
     &--left {
-      left: toRem(-10);
+      left: toRem(-20);
     }
 
     &--right {
-      right: toRem(-10);
+      right: toRem(-20);
     }
   }
 
   .slick-slide {
+
     > div {
       display: flex;
       gap: 20px;
+
     }
   }
 }
