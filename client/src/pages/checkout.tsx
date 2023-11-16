@@ -4,10 +4,12 @@ import { useHandlePickSeat } from "hooks/useHandlePickSeat";
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useHistory, useParams } from "react-router";
+import { getMe } from "store/features/auth.slice";
 import { booking, getShowtime } from "store/features/movie.slice";
 import { useAppDispatch, useAppSelector } from "store/store";
 import { BookingPayload, TicketType } from "types/movie.type";
 import { GetDetailPayload } from "types/shared/get-detail.type";
+import { renderSeatRowCharacter, ROUTES } from "utils/constant";
 import screenThumb from "../assets/images/screen-thumb.png";
 import "../styles/pages/_checkout.scss";
 import Swal from "sweetalert2";
@@ -35,11 +37,12 @@ const Checkout: React.FC = () => {
     if (!!isSuccess && !isFirst.current) {
       Swal.fire("Booking successfully!!", "You can check this in your profile", "success").then(
         () => {
+          dispatch(getMe());
           history.replace(ROUTES.HOME);
         },
       );
     }
-  }, [history, isSuccess]);
+  }, [dispatch, history, isSuccess]);
 
   const handleBooking = () => {
     const data: BookingPayload = {
@@ -158,7 +161,11 @@ const Checkout: React.FC = () => {
                   <Space>
                     <span style={{ width: 50 }}>Seats</span>
                     {arraySeatSelected.map((item: TicketType) => {
-                      return <span>{item.seat_number}</span>;
+                      return (
+                        <span className="payment__item--seats__item">
+                          {renderSeatRowCharacter(item.seat_number)}
+                        </span>
+                      );
                     })}
                   </Space>
                   <span className="payment__item__price">{subTotal.toLocaleString()}</span>

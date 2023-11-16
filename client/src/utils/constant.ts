@@ -95,3 +95,11 @@ export const fakeApi =
   process.env.NODE_ENV === "production"
     ? process.env.REACT_APP_SERVER_URL
     : "http://localhost:8000";
+
+export const TOTAL_SEAT = 10;
+
+export const renderSeatRowCharacter = (seatNumber: number) => {
+  const renderArray = [..."ABCDEFGHIJ"];
+
+  return `${renderArray[Math.floor(seatNumber / 16)]}${seatNumber}`;
+};

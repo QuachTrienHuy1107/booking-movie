@@ -3,6 +3,7 @@ import moment from "moment";
 import React, { memo } from "react";
 import { CinemaResponse } from "types/cinema.type";
 import { MovieResponse, ShowtimeResponse, TicketType } from "types/movie.type";
+import { renderSeatRowCharacter } from "utils/constant";
 
 interface IBookingHistory {
   bookingHistory: ShowtimeResponse[] | undefined;
@@ -44,7 +45,7 @@ const BookingHistory: React.FC<IBookingHistory> = memo(({ bookingHistory }) => {
       render: (tickets: TicketType[]) =>
         tickets
           .filter((item: TicketType) => !!item.status)
-          .map((ticket: TicketType) => ticket.seat_number)
+          .map((ticket: TicketType) => renderSeatRowCharacter(ticket.seat_number))
           .join(" , "),
     },
   ];

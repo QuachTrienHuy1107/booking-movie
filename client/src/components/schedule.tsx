@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Button, Space, Tabs } from "antd";
+import dayjs from "dayjs";
 import { useGetDate } from "hooks/useGetDate";
 import { useBookingTicketWithDate } from "hooks/useGetRangeDate";
 import moment from "moment";
@@ -34,14 +35,14 @@ interface ISchedule {
 const Schedule: React.FC<ISchedule> = ({ cinema }): any => {
   const history = useHistory();
   const { today, dateTomorrow } = useGetDate();
-  const { arrayDate } = useBookingTicketWithDate("07-10-2021", "10-10-2021");
+  const arrayDate = useBookingTicketWithDate();
 
   return (
     <div className="schedule">
       <Tabs tabBarExtraContent={tabExtra}>
         {arrayDate.map((date: any, index: number) => {
-          const getDate = moment(date).format("DD-MM");
-          const getWeek = moment(date).format("dddd");
+          const getDate = dayjs(date).format("DD-MM");
+          const getWeek = dayjs(date).format("dddd");
           return (
             <TabPane
               tab={

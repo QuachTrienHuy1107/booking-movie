@@ -1,25 +1,16 @@
-import { useGetDate } from "hooks/useGetDate";
-import moment from "moment";
-import React from "react";
+import dayjs, { Dayjs } from "dayjs";
 
-export const useBookingTicketWithDate = (dateStart: any, dateEnd: any) => {
-  const { getRangeDate } = useGetDate();
-  const [arrayDate, setArrayDate] = React.useState<Date[]>([]);
+export const useBookingTicketWithDate = (dateStart = dayjs().startOf("week"), dateEnd?: Dayjs) => {
+  let arrayDate = [];
+  let dateCount = 7;
+  if (!!dateEnd) {
+    dateCount = dayjs(dateStart).diff(dateEnd, "day");
+  }
 
-  React.useEffect(() => {
-    const getTicketWithDate = () => {
-      const dateEndFormat = dateEnd.split("-");
-      const dateStartFormat = dateStart.split("-");
-      const reFormatDateStart = `${dateStartFormat[2]}-${dateStartFormat[1]}-${dateStartFormat[0]}`;
-      const reFormatDateEnd = `${dateEndFormat[2]}-${dateEndFormat[1]}-${dateEndFormat[0]}`;
+  for (let i = 1; i <= dateCount; i++) {
+    const date = dayjs(dateStart.add(i, "day")).toDate();
+    arrayDate = [...arrayDate, date];
+  }
 
-      const rangeDate = getRangeDate(reFormatDateStart, reFormatDateEnd);
-
-      setArrayDate(rangeDate);
-    };
-
-    getTicketWithDate();
-  }, [dateEnd, dateStart, getRangeDate]);
-
-  return { arrayDate };
+  return arrayDate;
 };

@@ -21,6 +21,13 @@
   }
 
   .seat {
+    &__wrapper {
+      width: 640px;
+      height: 400px;
+      overflow: auto;
+      display: grid;
+      grid-template-columns: repeat(17, 1fr);
+    }
     &__btn {
       width: toRem(30);
       height: toRem(30);
